@@ -7,8 +7,17 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "InstagramAPIHeader.h"
+#import "InstagramAPIConstants.h"
+#import "InstagramAPI+PrivateMethods.h"
+
+#define kTestRequestTimeout 15
+
+static NSString *const kTestAccessToken = @"InstagramKitBaseUrl";
 
 @interface simplegramTests : XCTestCase
+
+@property (nonatomic, strong) InstagramAPI *api;
 
 @end
 
@@ -16,17 +25,21 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    self.api = [InstagramAPI sharedInstance];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    self.api = nil;
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testAPIInitialization {
+    
+    InstagramAPI *testAPI = [InstagramAPI sharedInstance];
+    XCTAssertNotNil(testAPI);
+    
+
 }
 
 - (void)testPerformanceExample {
@@ -35,5 +48,32 @@
         // Put the code you want to measure the time of here.
     }];
 }
+
+
+- (void)testUnauthorizedGetMediaRequest
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
+    Class modelClass = [InstagramMedia class];
+    self.api.accessToken = nil;
+    
+    [self.api getPath:@"media/1032802639895336381_1194245772"
+           parameters:nil
+        responseModel:modelClass
+              success:^(id object) {                
+                  XCTAssertNotNil(object);
+                  XCTAssertTrue([object isKindOfClass:modelClass]);
+                  [expectation fulfill];
+              }
+              failure:^(NSError *error, NSInteger a) {
+                  XCTAssert(NO);
+              }];
+    
+    [self waitForExpectationsWithTimeout:kTestRequestTimeout
+     handler:^(NSError *error) {
+     XCTAssertNil(error, @"expectation not fulfilled: %@", error);
+     }];
+     
+}
+
 
 @end

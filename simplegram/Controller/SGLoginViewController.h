@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  SGLoginViewController.h
 //  simplegram
 //
 //  Created by Admin on 14.11.15.
@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface SGLoginViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIWebView *loginWebView;
 
 
 @end
-

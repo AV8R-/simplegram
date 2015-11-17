@@ -18,6 +18,10 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+    <key>InstagramAppClientId</key>
+    <string>f3125bbe50e749fdb17cabf68df9bd6f</string>
+    <key>InstagramAppRedirectURL</key>
+    <string>http://av8r-github.io</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 </dict>
