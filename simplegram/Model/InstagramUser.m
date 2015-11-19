@@ -23,8 +23,8 @@
 {
     self = [super initWithInfo:info subclass:[InstagramUser class] withMoc:moc];
     
-    if (self && info) {
-        [self updateDetails:info];
+    if (self && info && [info isKindOfClass:[NSDictionary class]]) {
+        //[self updateDetails:info];
     }
     
     return self;
@@ -32,7 +32,7 @@
 
 - (void)updateDetails:(NSDictionary *)info
 {
-    if (info && [info isKindOfClass:[NSDictionary class]]) {
+    if (info && [info isKindOfClass:[NSDictionary class]] && self.username == nil) {
         self.username = [[NSString alloc] initWithString:info[kUsername]];
         self.fullName = [[NSString alloc] initWithString:info[kFullName]];
 
@@ -45,12 +45,6 @@
             self.mediaCount = [NSNumber numberWithInteger:[(info[kCounts])[kCountMedia] integerValue]];
             self.followsCount = [NSNumber numberWithInteger:[(info[kCounts])[kCountFollows] integerValue]];
             self.followedByCount = [NSNumber numberWithInteger:[(info[kCounts])[kCountFollowedBy] integerValue]];
-        }
-        
-        NSError *error;
-        [self.moc save:&error];
-        if(error) {
-            NSLog(@"%@", error);
         }
     }
 }

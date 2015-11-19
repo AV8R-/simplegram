@@ -15,21 +15,57 @@
 
 @interface SGFeedTableViewController ()
 
-@property NSManagedObjectContext *moc;
-
 @end
 
 @implementation SGFeedTableViewController
-@synthesize feed;
+@synthesize feed, api, feedTableView;
 
 -(instancetype) initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
+    self.api = [InstagramAPI sharedInstance];
     
-    self.moc = [[NSManagedObjectContext alloc] init];
-    [self.moc setPersistentStoreCoordinator:[[(AppDelegate*)[[UIApplication sharedApplication] delegate] managedObjectContext] persistentStoreCoordinator]];
+    self.managedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSMainQueueConcurrencyType];
+    self.backgroundManagedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserverForName:NSManagedObjectContextDidSaveNotification
+     object:nil
+     queue:nil
+     usingBlock:^(NSNotification* note) {
+         NSManagedObjectContext *moc = self.managedObjectContext;
+         if (note.object != moc) {
+             [moc performBlock:^(){
+                 [moc mergeChangesFromContextDidSaveNotification:note];
+             }];
+         }
+     }];
+    
+    self.importer = [[SGImporter alloc] initWithContext:self.backgroundManagedObjectContext];
+    self.importer.delegate = self;
+    
+    self.feedTableView.estimatedRowHeight = 600.0;
+    self.feedTableView.rowHeight = UITableViewAutomaticDimension;
     
     return self;
+}
+
+- (NSManagedObjectContext *)setupManagedObjectContextWithConcurrencyType:(NSManagedObjectContextConcurrencyType)concurrencyType
+{
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:concurrencyType];
+    managedObjectContext.persistentStoreCoordinator =
+    [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:appDelegate.managedObjectModel];
+    NSError* error;
+    [managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                                  configuration:nil
+                                                                            URL:[[appDelegate applicationDocumentsDirectory] URLByAppendingPathComponent:@"simplegram.sqlite"]
+                                                                        options:nil
+                                                                          error:&error];
+    if (error) {
+        NSLog(@"error: %@", error.localizedDescription);
+    }
+    return managedObjectContext;
 }
 
 - (void)viewDidLoad {
@@ -37,9 +73,14 @@
     
     
     /**/
-    
-    [self updateStoreFromInstagramAPI];
+    [self.importer importPopular];
+    //[self updateStoreFromInstagramAPI];
     [self fillFeedWithStore];
+    
+    UIRefreshControl * refreshControl = [[UIRefreshControl alloc] init];
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
+    [refreshControl addTarget:self action:@selector(refreshFeed:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
     
     /**
     
@@ -52,13 +93,31 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
--(void) updateStoreFromInstagramAPI
+-(void) loadingFeedDidEnd
 {
-    self.api = [InstagramAPI sharedInstance];
-    
-    [self.api getPopularMediaWithSuccess:^(NSArray *result) {
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self fillFeedWithStore];
         [self.feedTableView reloadData];
+    });
+}
+
+-(void) refreshFeed:(UIRefreshControl *)refreshControl
+{
+    //refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
+    
+    //[self updateStoreFromInstagramAPI];
+}
+
+-(void) updateStoreFromInstagramAPI
+{
+    __weak __typeof(self)weakSelf = self;
+    
+    [weakSelf.api getPopularMediaWithSuccess:^(NSArray *result) {
+        [weakSelf fillFeedWithStore];
+        [weakSelf.refreshControl endRefreshing];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.feedTableView reloadData];
+        });
     }
                                  failure:^(NSError *e, NSInteger statusCode) {
                                      NSLog(@"%@", e);
@@ -69,7 +128,7 @@
 {
     NSFetchRequest *request= [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"InstagramMedia"
-                                              inManagedObjectContext:self.moc];
+                                              inManagedObjectContext:self.managedObjectContext];
     
     [request setEntity:entity];
     
@@ -78,7 +137,7 @@
     [request setSortDescriptors:@[createdDateDescriptor]];
     
     NSError *error;
-    feed = [[self.moc executeFetchRequest:request error:&error] mutableCopy];
+    feed = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,11 +157,71 @@
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SGPhotoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"photo_cell" forIndexPath:indexPath];
+
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self heightForPhotoCellAtIndexPath:indexPath];
+}
+
+-(CGFloat)heightForPhotoCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static SGPhotoTableViewCell * sizingCell = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"photo_cell"];
+    });
     
+    [self configurePhotoCell:sizingCell ForRowAtIndexPath:indexPath];
+    return [self calculateHeightForConfiguredSizingCell:sizingCell];
+}
+
+-(CGFloat) calculateHeightForConfiguredSizingCell:(UITableViewCell*)sizingCell
+{
+    [sizingCell setNeedsLayout];
+    [sizingCell layoutIfNeeded];
+    
+    CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return size.height;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell;
+    
+    cell = [self photoCellAtIndexPath:indexPath];
+    [self downloadImageForCell:cell atIndexPath:indexPath];
+    
+    return cell;
+}
+
+-(SGPhotoTableViewCell *) photoCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    SGPhotoTableViewCell *cell = [feedTableView dequeueReusableCellWithIdentifier:@"photo_cell" forIndexPath:indexPath];
+    [self configurePhotoCell:cell ForRowAtIndexPath:indexPath];
+    return cell;
+}
+
+-(void) configurePhotoCell:(SGPhotoTableViewCell*)cell ForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     InstagramMedia *media = [feed objectAtIndex:indexPath.section];
     
+    CGFloat correctImageViewHeight = media.imageHeight ?
+    self.feedTableView.frame.size.width * [media.imageHeight floatValue] / [media.imageWidth floatValue] :
+    ;
+    
+    [cell.photoImageView addConstraint:[NSLayoutConstraint constraintWithItem:cell.photoImageView
+                                                                    attribute:NSLayoutAttributeHeight
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:nil
+                                                                    attribute:NSLayoutAttributeNotAnAttribute
+                                                                   multiplier:1.0
+                                                                     constant: correctImageViewHeight]];
+    
+}
+
+-(void) downloadImageForCell:(SGPhotoTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
+{
+    InstagramMedia *media = [feed objectAtIndex:indexPath.section];
     if (media.standartResolutionImageData) {
         cell.photoImageView.image = [UIImage imageWithData:media.standartResolutionImageData];
     }
@@ -119,15 +238,19 @@
                                                                           UIImage *image = [[UIImage alloc] initWithData:data];
                                                                           media.photo = image;
                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                              media.standartResolutionImageData = data;
                                                                               cell.photoImageView.image = media.photo;
+                                                                              NSError *error;
+                                                                              if(![self.managedObjectContext save:&error])
+                                                                              {
+                                                                                  abort();
+                                                                              }
                                                                           });
                                                                       }];
         [getStandartResolutionImageTask resume];
     }
-    
-    return cell;
-}
 
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
@@ -139,7 +262,14 @@
     }
     
     InstagramMedia *media = [feed objectAtIndex:section];
-    InstagramUser *user = media.user;
+    id userID = media.user;
+    InstagramUser *user;
+    if([userID isKindOfClass:[NSManagedObjectID class]]) {
+        user = [self.managedObjectContext objectWithID:userID];
+    }
+    else {
+        user = (InstagramUser*)userID;
+    }
     
     view.usernameLabel.text = user.username;
     
@@ -160,7 +290,6 @@
                                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                                   view.userPhotoImageView.image = user.photo;
                                                                               });
-                                                                              //[tableView setNeedsLayout];
                                                                           }];
     [getStandartResolutionImageTask resume];
     

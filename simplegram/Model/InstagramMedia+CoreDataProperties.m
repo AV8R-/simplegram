@@ -2,7 +2,7 @@
 //  InstagramMedia+CoreDataProperties.m
 //  simplegram
 //
-//  Created by Admin on 15.11.15.
+//  Created by Admin on 19.11.15.
 //  Copyright © 2015 Manshilin. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -19,22 +19,23 @@
 @dynamic isVideo;
 @dynamic likesCount;
 @dynamic link;
-@dynamic lowResolutionImageURL;
-@dynamic lowResolutionVideoURL;
-@dynamic standartResolutionImageURL;
-@dynamic standartResolutionVideoURL;
-@dynamic userHasLiked;
-@dynamic thumbnailURL;
-@dynamic thumbnailData;
 @dynamic lowResolutionImageData;
-@dynamic standartResolutionImageData;
+@dynamic lowResolutionImageURL;
 @dynamic lowResolutionVideoData;
+@dynamic lowResolutionVideoURL;
+@dynamic standartResolutionImageData;
+@dynamic standartResolutionImageURL;
 @dynamic standartResolutionVideoData;
+@dynamic standartResolutionVideoURL;
+@dynamic thumbnailData;
+@dynamic thumbnailURL;
+@dynamic userHasLiked;
+@dynamic imageHeight;
+@dynamic imageWidth;
+@dynamic caption;
 @dynamic comments;
 @dynamic likes;
 @dynamic user;
-@dynamic caption;
-
 
 #pragma mark Liskes manipulation
 
@@ -91,6 +92,5 @@
         [self removeCommentsObject:value];
     }
 }
-
 
 @end

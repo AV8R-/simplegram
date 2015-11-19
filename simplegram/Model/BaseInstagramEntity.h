@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, retain) NSManagedObjectContext *moc;
 
++(id) findOrCreateEntity:(Class)modelClass
+                  WithId:(NSString*)instagramId
+               inContext:(NSManagedObjectContext *)context;
+
 /**
  * Виртуальный констркутор, переопределен в подкласах
  * param JSON с полями объекта

@@ -57,4 +57,9 @@ didFinishDownloadingToURL:(NSURL *)location
     _downloadProgressView.hidden = YES;
 }
 
+-(void) prepareForReuse
+{
+    self.photoImageView.image = nil;
+}
+
 @end

@@ -23,10 +23,45 @@
 -(BOOL) isSessionValid;
 -(BOOL)receivedValidAccessTokenFromURL:(NSURL *)url;
 
-#pragma mark Media access
+#pragma mark Base calls
+
+/**
+ * Базовый GET-запрос к API Instagram. Получает одну сущность
+**/
+- (void)getPath:(NSString *)path
+     parameters:(NSDictionary *)parameters
+        success:(void (^)(NSDictionary* json))success
+        failure:(void (^)(NSError* error, NSInteger serverStatusCode))failure;
+
+/**
+ * Базовый GET-запрос к API Instagram получает массив сущностей.
+**/
+- (void)getArrayFromPath:(NSString *)path
+              parameters:(NSDictionary *)parameters
+           responseModel:(Class)modelClass
+                 success:(void (^)(NSArray *models))success
+                 failure:(void (^)(NSError* error, NSInteger serverStatusCode))failure;
+
+
+/**
+ * Базовый POST-запрос к API Instagram
+**/
+- (void)postPath:(NSString *)path
+      parameters:(NSDictionary *)parameters
+   responseModel:(Class)modelClass
+         success:(void (^)(id object))success
+         failure:(void (^)(NSError* error, NSInteger serverStatusCode))failure;
+
+#pragma mark Endpoints
+/**
+ * Запрос на получение фида "популярное"
+**/
 - (void)getPopularMediaWithSuccess:(void (^)(NSArray *media))success
                            failure:(void (^)(NSError* error, NSInteger serverStatusCode))failure;
 
+/**
+ * Запрос на получение собственного фида
+**/
 - (void)getSelfFeedWithCount:(NSInteger)count
                        maxId:(NSString *)maxId
                      success:(void (^)(NSArray *media))success

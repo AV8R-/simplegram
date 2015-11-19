@@ -55,7 +55,8 @@
         self.appRedirectURL = info[kInstagramRedirectUrlConfigurationKey];
         
         AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        self.managedObjectContext = [appDelegate managedObjectContext];
+        self.managedObjectContext = [[NSManagedObjectContext alloc] init];
+        self.managedObjectContext.persistentStoreCoordinator = [[appDelegate managedObjectContext] persistentStoreCoordinator];
     }
     
     return self;
@@ -181,13 +182,9 @@
 #pragma mark Base paths calls
 #pragma mark -
 
-/**
- * Базовый GET-запрос к API Instagram. Получает одну сущность
-**/
 - (void)getPath:(NSString *)path
      parameters:(NSDictionary *)parameters
-  responseModel:(Class)modelClass
-        success:(void (^)(id object))success
+        success:(void (^)(NSDictionary* json))success
         failure:(void (^)(NSError* error, NSInteger serverStatusCode))failure
 {
     NSDictionary *params = [self dictionaryWithAccessTokenAndParameters:parameters];
@@ -210,25 +207,12 @@
                                                     if (httpResp.statusCode == 200) {
                                                         NSError *jsonError;
                                                         
-                                                        NSDictionary *recievedJSON = [NSJSONSerialization JSONObjectWithData:data
-                                                                                                                     options:NSJSONReadingAllowFragments
-                                                                                                                       error:&jsonError];
-                                                        if (!jsonError) {
-                                                            NSDictionary *dataDictionary = recievedJSON[kData];
-                                                            id model;
-                                                            if (modelClass == [NSDictionary class]) {
-                                                                model = [dataDictionary copy];
-                                                            }
-                                                            else {
-                                                                model = [[modelClass alloc] initWithInfo:dataDictionary];
-                                                                
-                                                            }
-                                                            
-                                                            NSError *mocError;
-                                                            if(![self.managedObjectContext save:&mocError]) {
-                                                                (failure)? failure(mocError, 0) : 0;
-                                                            }
-                                                            success(model);
+                                                        id recievedJSON = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                          options:NSJSONReadingAllowFragments
+                                                                                                            error:&jsonError];
+                                                        if (!jsonError && [recievedJSON isKindOfClass:[NSDictionary class]]) {
+                                                            NSDictionary *dataDictionary = (NSDictionary*)recievedJSON[kData];
+                                                            success(dataDictionary);
                                                         }
                                                         else {
                                                             (failure)? failure(error, httpResp.statusCode) : 0;
@@ -240,9 +224,6 @@
     
 }
 
-/**
- * Базовый GET-запрос к API Instagram получает массив сущностей.
-**/
 - (void)getArrayFromPath:(NSString *)path
               parameters:(NSDictionary *)parameters
            responseModel:(Class)modelClass
@@ -269,29 +250,12 @@
                                                     if (httpResp.statusCode == 200) {
                                                         NSError *jsonError;
                                                         
-                                                        NSDictionary *recievedJSON = [NSJSONSerialization JSONObjectWithData:data
+                                                        id recievedJSON = [NSJSONSerialization JSONObjectWithData:data
                                                                                                                      options:NSJSONReadingAllowFragments
                                                                                                                        error:&jsonError];
-                                                        if (!jsonError && recievedJSON != nil) {
-                                                            NSArray *dataArray = recievedJSON[kData];
-                                                            NSMutableArray *models = [[NSMutableArray alloc] init];
-                                                            for (NSDictionary *jsonModel in dataArray) {
-                                                                id model;
-                                                                if (modelClass == [NSDictionary class]) {
-                                                                    model = [jsonModel copy];
-                                                                }
-                                                                else {
-                                                                    model = [[modelClass alloc] initWithInfo:jsonModel managedObjectContext:self.managedObjectContext];
-                                                                    [models addObject:model];
-                                                                }
-
-                                                            }
-                                                            
-                                                            NSError *mocError;
-                                                            if(![self.managedObjectContext save:&mocError]) {
-                                                                (failure)? failure(mocError, 0) : 0;
-                                                            }
-                                                            success(models);
+                                                        if (!jsonError && [recievedJSON isKindOfClass:[NSDictionary class]]) {
+                                                            NSArray *dataArray = ((NSDictionary*)recievedJSON)[kData];
+                                                            success(dataArray);
                                                         }
                                                         else {
                                                             (failure)? failure(error, httpResp.statusCode) : 0;
@@ -303,9 +267,6 @@
     
 }
 
-/**
- * Базовый POST-запрос к API Instagram
-**/
 - (void)postPath:(NSString *)path
       parameters:(NSDictionary *)parameters
    responseModel:(Class)modelClass

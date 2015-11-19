@@ -25,8 +25,10 @@
 		840A7DE91BF749840068F8A4 /* InstagramAPIConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 840A7DE81BF749840068F8A4 /* InstagramAPIConstants.m */; settings = {ASSET_TAGS = (); }; };
 		8413D9E11BF75C3000562BCF /* SGLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8413D9E01BF75C3000562BCF /* SGLoginViewController.m */; settings = {ASSET_TAGS = (); }; };
 		8453A15C1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453A15B1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m */; settings = {ASSET_TAGS = (); }; };
-		8453A15F1BF9D1B00055CA2F /* 67312.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 8453A15E1BF9D1B00055CA2F /* 67312.jpeg */; settings = {ASSET_TAGS = (); }; };
 		8453A1621BF9EE980055CA2F /* SGPhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453A1611BF9EE980055CA2F /* SGPhotoTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		8453A1681BFBB7120055CA2F /* SGUserThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453A1671BFBB7120055CA2F /* SGUserThumbnailImageView.m */; settings = {ASSET_TAGS = (); }; };
+		8453A16E1BFBC5E50055CA2F /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453A16D1BFBC5E50055CA2F /* comment.png */; settings = {ASSET_TAGS = (); }; };
+		8453A1741BFCA05E0055CA2F /* SGImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453A1731BFCA05E0055CA2F /* SGImporter.m */; settings = {ASSET_TAGS = (); }; };
 		84F0908D1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F0908C1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m */; settings = {ASSET_TAGS = (); }; };
 		84F090911BF9B51C00FEC817 /* SGFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F090901BF9B51C00FEC817 /* SGFeedTableViewController.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
@@ -78,9 +80,14 @@
 		8413D9E01BF75C3000562BCF /* SGLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGLoginViewController.m; path = Controller/SGLoginViewController.m; sourceTree = "<group>"; };
 		8453A15A1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGFeedPostSectionHeaderView.h; path = View/SGFeedPostSectionHeaderView.h; sourceTree = "<group>"; };
 		8453A15B1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGFeedPostSectionHeaderView.m; path = View/SGFeedPostSectionHeaderView.m; sourceTree = "<group>"; };
-		8453A15E1BF9D1B00055CA2F /* 67312.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 67312.jpeg; sourceTree = "<group>"; };
 		8453A1601BF9EE980055CA2F /* SGPhotoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGPhotoTableViewCell.h; path = View/SGPhotoTableViewCell.h; sourceTree = "<group>"; };
 		8453A1611BF9EE980055CA2F /* SGPhotoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGPhotoTableViewCell.m; path = View/SGPhotoTableViewCell.m; sourceTree = "<group>"; };
+		8453A1661BFBB7120055CA2F /* SGUserThumbnailImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGUserThumbnailImageView.h; path = View/SGUserThumbnailImageView.h; sourceTree = "<group>"; };
+		8453A1671BFBB7120055CA2F /* SGUserThumbnailImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGUserThumbnailImageView.m; path = View/SGUserThumbnailImageView.m; sourceTree = "<group>"; };
+		8453A16D1BFBC5E50055CA2F /* comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment.png; sourceTree = "<group>"; };
+		8453A1721BFCA05E0055CA2F /* SGImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGImporter.h; path = API/SGImporter.h; sourceTree = "<group>"; };
+		8453A1731BFCA05E0055CA2F /* SGImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGImporter.m; path = API/SGImporter.m; sourceTree = "<group>"; };
+		8453A1751BFCBC9B0055CA2F /* SGImporterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SGImporterDelegate.h; path = API/SGImporterDelegate.h; sourceTree = "<group>"; };
 		84F0908B1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BaseInstagramEntity+CoreDataProperties.h"; path = "Model/BaseInstagramEntity+CoreDataProperties.h"; sourceTree = "<group>"; };
 		84F0908C1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "BaseInstagramEntity+CoreDataProperties.m"; path = "Model/BaseInstagramEntity+CoreDataProperties.m"; sourceTree = "<group>"; };
 		84F0908E1BF9155000FEC817 /* InstagramMediaDownloadDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = InstagramMediaDownloadDelegate.h; path = Model/InstagramMediaDownloadDelegate.h; sourceTree = "<group>"; };
@@ -179,11 +186,7 @@
 				840A7DD81BF73DB20068F8A4 /* View */,
 				840A7DB11BF73D8A0068F8A4 /* AppDelegate.h */,
 				840A7DB21BF73D8A0068F8A4 /* AppDelegate.m */,
-				840A7DB71BF73D8A0068F8A4 /* Main.storyboard */,
-				840A7DBD1BF73D8A0068F8A4 /* Assets.xcassets */,
-				840A7DBF1BF73D8A0068F8A4 /* LaunchScreen.storyboard */,
 				840A7DC21BF73D8A0068F8A4 /* Info.plist */,
-				840A7DBA1BF73D8A0068F8A4 /* simplegram.xcdatamodeld */,
 				840A7DAE1BF73D8A0068F8A4 /* Supporting Files */,
 			);
 			path = simplegram;
@@ -210,10 +213,13 @@
 		840A7DD61BF73DA10068F8A4 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				8408E2751BF85E0F0034D776 /* InstagramAPIHeader.h */,
 				840A7DEA1BF7498F0068F8A4 /* Constants */,
 				840A7DE41BF7460D0068F8A4 /* InstagramAPI.h */,
 				840A7DE51BF7460D0068F8A4 /* InstagramAPI.m */,
-				8408E2751BF85E0F0034D776 /* InstagramAPIHeader.h */,
+				8453A1751BFCBC9B0055CA2F /* SGImporterDelegate.h */,
+				8453A1721BFCA05E0055CA2F /* SGImporter.h */,
+				8453A1731BFCA05E0055CA2F /* SGImporter.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -221,6 +227,7 @@
 		840A7DD71BF73DAB0068F8A4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				840A7DBA1BF73D8A0068F8A4 /* simplegram.xcdatamodeld */,
 				8408E26E1BF7B82B0034D776 /* BaseInstagramEntity */,
 				8408E26F1BF7B85B0034D776 /* InstagramUser */,
 				8408E2701BF7B8650034D776 /* InstagramComment */,
@@ -232,10 +239,12 @@
 		840A7DD81BF73DB20068F8A4 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				8453A15A1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.h */,
-				8453A15B1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m */,
-				8453A1601BF9EE980055CA2F /* SGPhotoTableViewCell.h */,
-				8453A1611BF9EE980055CA2F /* SGPhotoTableViewCell.m */,
+				840A7DBD1BF73D8A0068F8A4 /* Assets.xcassets */,
+				840A7DBF1BF73D8A0068F8A4 /* LaunchScreen.storyboard */,
+				840A7DB71BF73D8A0068F8A4 /* Main.storyboard */,
+				8453A1691BFBC3C60055CA2F /* Cells */,
+				8453A1661BFBB7120055CA2F /* SGUserThumbnailImageView.h */,
+				8453A1671BFBB7120055CA2F /* SGUserThumbnailImageView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -263,9 +272,20 @@
 		8453A15D1BF9D19F0055CA2F /* Temporary */ = {
 			isa = PBXGroup;
 			children = (
-				8453A15E1BF9D1B00055CA2F /* 67312.jpeg */,
+				8453A16D1BFBC5E50055CA2F /* comment.png */,
 			);
 			name = Temporary;
+			sourceTree = "<group>";
+		};
+		8453A1691BFBC3C60055CA2F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				8453A15A1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.h */,
+				8453A15B1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m */,
+				8453A1601BF9EE980055CA2F /* SGPhotoTableViewCell.h */,
+				8453A1611BF9EE980055CA2F /* SGPhotoTableViewCell.m */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -349,9 +369,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				840A7DC11BF73D8A0068F8A4 /* LaunchScreen.storyboard in Resources */,
-				8453A15F1BF9D1B00055CA2F /* 67312.jpeg in Resources */,
 				840A7DBE1BF73D8A0068F8A4 /* Assets.xcassets in Resources */,
 				840A7DB91BF73D8A0068F8A4 /* Main.storyboard in Resources */,
+				8453A16E1BFBC5E50055CA2F /* comment.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +393,7 @@
 				840A7DE91BF749840068F8A4 /* InstagramAPIConstants.m in Sources */,
 				8408E26A1BF7B8020034D776 /* InstagramComment+CoreDataProperties.m in Sources */,
 				8408E26C1BF7B8020034D776 /* InstagramMedia+CoreDataProperties.m in Sources */,
+				8453A1741BFCA05E0055CA2F /* SGImporter.m in Sources */,
 				8408E26D1BF7B8020034D776 /* InstagramMedia.m in Sources */,
 				8453A15C1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m in Sources */,
 				8408E2691BF7B8020034D776 /* InstagramUser.m in Sources */,
@@ -381,6 +402,7 @@
 				840A7DB31BF73D8A0068F8A4 /* AppDelegate.m in Sources */,
 				84F090911BF9B51C00FEC817 /* SGFeedTableViewController.m in Sources */,
 				8453A1621BF9EE980055CA2F /* SGPhotoTableViewCell.m in Sources */,
+				8453A1681BFBB7120055CA2F /* SGUserThumbnailImageView.m in Sources */,
 				8408E2681BF7B8020034D776 /* InstagramUser+CoreDataProperties.m in Sources */,
 				8408E2671BF7B8020034D776 /* BaseInstagramEntity.m in Sources */,
 				8408E26B1BF7B8020034D776 /* InstagramComment.m in Sources */,

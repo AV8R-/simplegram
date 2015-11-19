@@ -36,8 +36,8 @@
 - (instancetype)initWithInfo:(NSDictionary *)info managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     self = [super initWithInfo:info subclass:[InstagramMedia class] withMoc:managedObjectContext];
-    if (self && info) {
-        [self updateDetails:info];
+    if (self && info && [info isKindOfClass:[NSDictionary class]]) {
+        //[self updateDetails:info];
         //[self downLoadImages];
     }
     return self;
@@ -45,23 +45,46 @@
 
 -(void) updateDetails:(NSDictionary *)info
 {
-    self.user = [[InstagramUser alloc] initWithInfo:info[kUser] managedObjectContext:self.moc];
+    if([info[kUser] isKindOfClass:[NSDictionary class]]) {
+        self.user = [BaseInstagramEntity findOrCreateEntity:[InstagramUser class]
+                                                     WithId:info[kUser][kID] inContext:self.moc];
+        [self.user updateDetails:info[kUser]];
+    }
+    //self.user = [[InstagramUser alloc] initWithInfo:info[kUser] managedObjectContext:self.moc];
     self.userHasLiked = [NSNumber numberWithBool:[info[kUserHasLiked] boolValue]];
     self.createdDate = [[NSDate alloc] initWithTimeIntervalSince1970:[info[kCreatedDate] doubleValue]];
     self.link = [[NSString alloc] initWithString:info[kLink]];
-    self.caption = [[InstagramComment alloc] initWithInfo:info[kCaption] managedObjectContext:self.moc];
+    if([info[kCaption] isKindOfClass:[NSDictionary class]]) {
+        self.caption = [BaseInstagramEntity findOrCreateEntity:[InstagramComment class]
+                                                        WithId:info[kCaption][kID]
+                                                     inContext:self.moc];
+        [self.caption updateDetails:info[kCaption]];
+    }
+    //self.caption = [[InstagramComment alloc] initWithInfo:info[kCaption] managedObjectContext:self.moc];
     self.likesCount = (info[kLikes])[kCount];
     self.likes = [[NSMutableSet alloc] init];
     for (NSDictionary *userInfo in (info[kLikes])[kData]) {
-        InstagramUser *user = [[InstagramUser alloc] initWithInfo:userInfo managedObjectContext:self.moc];
-        [self addLikesObject:user];
+        if([userInfo isKindOfClass:[NSDictionary class]]) {
+            InstagramUser *user = [BaseInstagramEntity findOrCreateEntity:[InstagramUser class]
+                                                                   WithId:userInfo[kID]
+                                                                inContext:self.moc];
+            [user updateDetails:userInfo];
+            [self addLikesObject:user];
+        }
+        //InstagramUser *user = [[InstagramUser alloc] initWithInfo:userInfo managedObjectContext:self.moc];
     }
     
     self.commentCount = (info[kComments])[kCount];
     self.comments = [[NSMutableSet alloc] init];
     for (NSDictionary *commentInfo in (info[kComments])[kData]) {
-        InstagramComment *comment = [[InstagramComment alloc] initWithInfo:commentInfo managedObjectContext:self.moc];
-        [self addCommentsObject:comment];
+        if([commentInfo isKindOfClass:[NSDictionary class]]) {
+            InstagramComment *comment = [BaseInstagramEntity findOrCreateEntity:[InstagramComment class]
+                                                                         WithId:commentInfo[kID]
+                                                                      inContext:self.moc];
+            [comment updateDetails:commentInfo];
+            //InstagramComment *comment = [[InstagramComment alloc] initWithInfo:commentInfo managedObjectContext:self.moc];
+            [self addCommentsObject:comment];
+        }
     }
     
     
@@ -71,12 +94,6 @@
     self.isVideo = [NSNumber numberWithBool:[mediaType isEqualToString:[NSString stringWithFormat:@"%@",kMediaTypeVideo]]];
     if (self.isVideo) {
         //[self initializeVideos:info[kVideos]];
-    }
-    
-    NSError *error;
-    [self.moc save:&error];
-    if(error) {
-        NSLog(@"%@", error);
     }
 }
 
@@ -93,6 +110,9 @@
     lowResolutionImageFrameSize = CGSizeMake([lowResInfo[kWidth] floatValue], [lowResInfo[kHeight] floatValue]);
     
     NSDictionary *standardResInfo = imagesInfo[kStandardResolution];
+    self.imageHeight = [NSNumber numberWithFloat:[standardResInfo[kWidth] floatValue]];
+    self.imageWidth = [NSNumber numberWithFloat:[standardResInfo[kHeight] floatValue]];
+    
     self.standartResolutionImageURL = standardResInfo[kURL]? standardResInfo[kURL] : nil;
     standardResolutionImageFrameSize = CGSizeMake([standardResInfo[kWidth] floatValue], [standardResInfo[kHeight] floatValue]);
 }
@@ -162,11 +182,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     self->photo = photo;
     NSData *imageData = UIImageJPEGRepresentation(photo, 1.0);
     self.standartResolutionImageData = imageData;
-    NSError *error;
-    [self.managedObjectContext save:&error];
-    if (error) {
-        NSLog(@"%@", error);
-    }
 }
 
 @end

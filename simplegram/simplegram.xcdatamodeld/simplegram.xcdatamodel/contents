@@ -4,14 +4,16 @@
         <attribute name="instagramId" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="InstagramComment" representedClassName="InstagramComment" parentEntity="BaseInstagramEntity" syncable="YES">
-        <attribute name="createdDate" attributeType="Date" syncable="YES"/>
-        <attribute name="text" attributeType="String" syncable="YES"/>
-        <relationship name="user" maxCount="1" deletionRule="Nullify" destinationEntity="InstagramUser" syncable="YES"/>
+        <attribute name="createdDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InstagramUser" syncable="YES"/>
     </entity>
     <entity name="InstagramMedia" representedClassName="InstagramMedia" parentEntity="BaseInstagramEntity" syncable="YES">
         <attribute name="commentCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="createdDate" attributeType="Date" syncable="YES"/>
-        <attribute name="isVideo" attributeType="Boolean" syncable="YES"/>
+        <attribute name="createdDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="imageHeight" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="imageWidth" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="isVideo" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="likesCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lowResolutionImageData" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -28,7 +30,7 @@
         <relationship name="caption" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InstagramComment" syncable="YES"/>
         <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="InstagramComment" syncable="YES"/>
         <relationship name="likes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="InstagramUser" syncable="YES"/>
-        <relationship name="user" maxCount="1" deletionRule="Nullify" destinationEntity="InstagramUser" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InstagramUser" syncable="YES"/>
     </entity>
     <entity name="InstagramUser" representedClassName="InstagramUser" parentEntity="BaseInstagramEntity" syncable="YES">
         <attribute name="bio" optional="YES" attributeType="String" syncable="YES"/>
@@ -37,13 +39,13 @@
         <attribute name="fullName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mediaCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="profilePictureURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="username" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="BaseInstagramEntity" positionX="-101" positionY="-252" width="128" height="60"/>
-        <element name="InstagramComment" positionX="-144" positionY="-99" width="128" height="88"/>
-        <element name="InstagramMedia" positionX="151" positionY="27" width="128" height="345"/>
-        <element name="InstagramUser" positionX="-459" positionY="-36" width="128" height="163"/>
+        <element name="InstagramComment" positionX="-144" positionY="-99" width="128" height="90"/>
+        <element name="InstagramMedia" positionX="151" positionY="27" width="128" height="375"/>
+        <element name="InstagramUser" positionX="-459" positionY="-36" width="128" height="165"/>
     </elements>
 </model>
