@@ -168,8 +168,36 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     }
 }
  */
+#pragma mark Getters
+-(InstagramUser*) getCreatorwithManagedObjectContext:(NSManagedObjectContext*)moc
+{
+    id creatorID = self.user;
+    InstagramUser *creator;
+    if ([creator isKindOfClass:[NSManagedObjectID class]]) {
+        creator = [moc objectWithID:creatorID];
+    }
+    else {
+        creator = (InstagramUser*)creatorID;
+    }
+    
+    return creator;
+}
 
-#pragma Comparing
+-(InstagramComment*) getCaptionwithManagedObjectContext:(NSManagedObjectContext*)moc
+{
+    id commentID = self.caption;
+    InstagramComment *comment;
+    if ([commentID isKindOfClass:[NSManagedObjectID class]]) {
+        comment = [moc objectWithID:commentID];
+    }
+    else {
+        comment = (InstagramComment*)commentID;
+    }
+    
+    return comment;
+}
+
+#pragma mark Comparing
 
 - (BOOL)isEqualToMedia:(InstagramMedia *)media
 {

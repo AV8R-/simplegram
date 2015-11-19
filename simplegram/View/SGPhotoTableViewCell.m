@@ -9,7 +9,6 @@
 #import "SGPhotoTableViewCell.h"
 
 @implementation SGPhotoTableViewCell
-@synthesize tableView;
 
 - (void)awakeFromNib {
     // Initialization code

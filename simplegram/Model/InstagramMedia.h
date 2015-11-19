@@ -22,6 +22,18 @@ NS_ASSUME_NONNULL_BEGIN
 **/
 @property (nonatomic, retain) UIImage *photo;
 
+/**
+ * По пока невыясненным причинам иногда юзер хранится моделью в ОЗУ, иногда ссылкой на сущность БД
+ * Поэтому эта функция возвращает создателя поста
+**/
+-(InstagramUser*) getCreatorwithManagedObjectContext:(NSManagedObjectContext*)moc;
+
+/**
+ * ^^^
+ * По той же причине аналогичный геттер для описания
+**/
+-(InstagramComment*) getCaptionwithManagedObjectContext:(NSManagedObjectContext*)moc;
+
 - (BOOL)isEqualToMedia:(InstagramMedia *)media;
 
 @end

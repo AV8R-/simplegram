@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "InstagramMedia.h"
 #import "InstagramUser+CoreDataProperties.h"
+#import "InstagramComment+CoreDataProperties.h"
 
 @interface SGFeedTableViewController ()
 
@@ -23,6 +24,8 @@
 -(instancetype) initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
+    
+    //Настройка контекстов, их синхронизация.
     
     self.managedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSMainQueueConcurrencyType];
     self.backgroundManagedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSPrivateQueueConcurrencyType];
@@ -40,10 +43,14 @@
          }
      }];
     
+    //Настройка импортера данных
+    
     self.importer = [[SGImporter alloc] initWithContext:self.backgroundManagedObjectContext];
     self.importer.delegate = self;
     
-    self.feedTableView.estimatedRowHeight = 600.0;
+    //Настрока tableView
+
+    self.feedTableView.estimatedRowHeight = 460.0;
     self.feedTableView.rowHeight = UITableViewAutomaticDimension;
     
     return self;
@@ -71,9 +78,7 @@
     [super viewDidLoad];
     
     
-    /**/
-    [self.importer importPopular];
-    //[self updateStoreFromInstagramAPI];
+    //[self.importer importPopular];
     [self fillFeedWithStore];
     
     UIRefreshControl * refreshControl = [[UIRefreshControl alloc] init];
@@ -170,6 +175,11 @@
     return [self heightForPhotoCellAtIndexPath:indexPath];
 }
 
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 375.0;
+}
+
 -(CGFloat)heightForPhotoCellAtIndexPath:(NSIndexPath *)indexPath
 {
     static SGPhotoTableViewCell * sizingCell = nil;
@@ -213,6 +223,8 @@
 -(void) configurePhotoCell:(SGPhotoTableViewCell*)cell ForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     InstagramMedia *media = [feed objectAtIndex:indexPath.section];
+    InstagramUser *user = [media getCreatorwithManagedObjectContext:self.managedObjectContext];
+    InstagramComment *caption = [media getCaptionwithManagedObjectContext:self.managedObjectContext];
     
     CGFloat correctImageViewHeight = media.imageHeight && media.imageWidth ?
     self.feedTableView.frame.size.width * [media.imageHeight floatValue] / [media.imageWidth floatValue] :
@@ -226,7 +238,10 @@
                                                                    multiplier:1.0
                                                                      constant: correctImageViewHeight]];
     //TODO: Обновить количество лайков, комментов, установить описание и пользователя
-    
+    cell.likesCountNumber.text = [NSString stringWithFormat:@"%@", media.likesCount];
+    cell.commentsCountLabel.text = [NSString stringWithFormat:@"%@", media.commentCount];
+    user ? cell.creatorLabel.text = [NSString stringWithString:user.username] : 0;
+    caption ? cell.captionLabel.text = [NSString stringWithString:caption.text] : 0;
 }
 
 /**
@@ -277,14 +292,7 @@
     }
     
     InstagramMedia *media = [feed objectAtIndex:section];
-    id userID = media.user;
-    InstagramUser *user;
-    if([userID isKindOfClass:[NSManagedObjectID class]]) {
-        user = [self.managedObjectContext objectWithID:userID];
-    }
-    else {
-        user = (InstagramUser*)userID;
-    }
+    InstagramUser *user = [media getCreatorwithManagedObjectContext:self.managedObjectContext];
     
     view.usernameLabel.text = user.username;
     

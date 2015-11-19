@@ -11,6 +11,10 @@
 @interface SGPhotoTableViewCell : UITableViewCell <NSURLSessionDownloadDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (weak, nonatomic) IBOutlet UIProgressView *downloadProgressView;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *commentsButton;
+@property (weak, nonatomic) IBOutlet UILabel *commentsCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *likesCountNumber;
+@property (weak, nonatomic) IBOutlet UILabel *creatorLabel;
+@property (weak, nonatomic) IBOutlet UILabel *captionLabel;
 
 @end
