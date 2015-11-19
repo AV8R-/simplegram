@@ -18,12 +18,11 @@
 @end
 
 @implementation SGFeedTableViewController
-@synthesize feed, api, feedTableView;
+@synthesize feed,  feedTableView;
 
 -(instancetype) initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-    self.api = [InstagramAPI sharedInstance];
     
     self.managedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSMainQueueConcurrencyType];
     self.backgroundManagedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSPrivateQueueConcurrencyType];
@@ -98,16 +97,19 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self fillFeedWithStore];
         [self.feedTableView reloadData];
+        [self.refreshControl endRefreshing];
     });
 }
 
 -(void) refreshFeed:(UIRefreshControl *)refreshControl
 {
-    //refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
     
+    [self.importer importPopular];
     //[self updateStoreFromInstagramAPI];
 }
 
+/* Мусор
 -(void) updateStoreFromInstagramAPI
 {
     __weak __typeof(self)weakSelf = self;
@@ -123,6 +125,7 @@
                                      NSLog(@"%@", e);
                                  }];
 }
+ */
 
 -(void) fillFeedWithStore
 {
@@ -147,18 +150,21 @@
 
 #pragma mark - Table view data source
 
+/**
+ * В секции находится аватар пользователя, юзернейм и время поста
+**/
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [feed count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
     return 1;
 }
 
-
-
-
+/**
+ * Вычисляется высота каждого поста.
+ * Странно, но API Instagram возвращает размеры картинок 640х640 всегда, хотя большинство имеют другой формат.
+**/
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self heightForPhotoCellAtIndexPath:indexPath];
@@ -189,11 +195,14 @@
     UITableViewCell *cell;
     
     cell = [self photoCellAtIndexPath:indexPath];
-    [self downloadImageForCell:cell atIndexPath:indexPath];
+    [self downloadImageForCell:(SGPhotoTableViewCell*)cell atIndexPath:indexPath];
     
     return cell;
 }
 
+/**
+ * Настраивает вид поста
+**/
 -(SGPhotoTableViewCell *) photoCellAtIndexPath:(NSIndexPath*)indexPath
 {
     SGPhotoTableViewCell *cell = [feedTableView dequeueReusableCellWithIdentifier:@"photo_cell" forIndexPath:indexPath];
@@ -205,9 +214,9 @@
 {
     InstagramMedia *media = [feed objectAtIndex:indexPath.section];
     
-    CGFloat correctImageViewHeight = media.imageHeight ?
+    CGFloat correctImageViewHeight = media.imageHeight && media.imageWidth ?
     self.feedTableView.frame.size.width * [media.imageHeight floatValue] / [media.imageWidth floatValue] :
-    ;
+    self.feedTableView.frame.size.width;
     
     [cell.photoImageView addConstraint:[NSLayoutConstraint constraintWithItem:cell.photoImageView
                                                                     attribute:NSLayoutAttributeHeight
@@ -216,9 +225,14 @@
                                                                     attribute:NSLayoutAttributeNotAnAttribute
                                                                    multiplier:1.0
                                                                      constant: correctImageViewHeight]];
+    //TODO: Обновить количество лайков, комментов, установить описание и пользователя
     
 }
 
+/**
+ * Подгружает картинку из БД, или если ее там нет,
+ * Скачивает ее с сервера Instagram
+**/
 -(void) downloadImageForCell:(SGPhotoTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
     InstagramMedia *media = [feed objectAtIndex:indexPath.section];
@@ -226,6 +240,7 @@
         cell.photoImageView.image = [UIImage imageWithData:media.standartResolutionImageData];
     }
     else {
+        //TODO: Добавить индикатор загрузки
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSURLSession *session = [NSURLSession sessionWithConfiguration:config
                                                               delegate:nil
@@ -296,6 +311,11 @@
     return view;
 }
 
+#pragma mark Micellaneous
+
+/**
+ * Возвращает строку "прошло врмени с момента публикации
+**/
 -(NSString *) stringIntervalSinceDate:(NSDate *)date
 {
     NSString *sinceString;

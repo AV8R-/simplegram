@@ -14,6 +14,7 @@
 @implementation InstagramComment
 @synthesize moc;
 
+/* Мусор. Вся логика создания была перенесена в базовый класс
 -(instancetype) initWithInfo:(NSDictionary *)info
 {
     self = [self initWithInfo:info managedObjectContext:nil];
@@ -31,6 +32,7 @@
     
     return self;
 }
+ */
 
 -(void) updateDetails:(NSDictionary *)info
 {

@@ -17,16 +17,12 @@
 {
     NSInteger downloadStandartResolutionTask;
 }
-@synthesize thumbnailFrameSize,
-            lowResolutionImageFrameSize,
-            standardResolutionImageFrameSize,
-            lowResolutionVideoFrameSize,
-            standardResolutionVideoFrameSize,
-            photo,
-            moc;
+@synthesize photo;
 
 #pragma mark Init
 
+/**
+ Мусор. Вся логика создания была перенесена в базовый класс
 - (instancetype)initWithInfo:(NSDictionary *)info
 {
     self = [self initWithInfo:info managedObjectContext:nil];
@@ -42,6 +38,7 @@
     }
     return self;
 }
+**/
 
 -(void) updateDetails:(NSDictionary *)info
 {
@@ -103,31 +100,33 @@
 {
     NSDictionary *thumbInfo = imagesInfo[kThumbnail];
     self.thumbnailURL = (thumbInfo[kURL]) ? thumbInfo[kURL] : nil;
-    thumbnailFrameSize = CGSizeMake([thumbInfo[kWidth] floatValue], [thumbInfo[kHeight] floatValue]);
+    //thumbnailFrameSize = CGSizeMake([thumbInfo[kWidth] floatValue], [thumbInfo[kHeight] floatValue]);
     
     NSDictionary *lowResInfo = imagesInfo[kLowResolution];
     self.lowResolutionImageURL = lowResInfo[kURL]? lowResInfo[kURL] : nil;
-    lowResolutionImageFrameSize = CGSizeMake([lowResInfo[kWidth] floatValue], [lowResInfo[kHeight] floatValue]);
+    //lowResolutionImageFrameSize = CGSizeMake([lowResInfo[kWidth] floatValue], [lowResInfo[kHeight] floatValue]);
     
     NSDictionary *standardResInfo = imagesInfo[kStandardResolution];
     self.imageHeight = [NSNumber numberWithFloat:[standardResInfo[kWidth] floatValue]];
     self.imageWidth = [NSNumber numberWithFloat:[standardResInfo[kHeight] floatValue]];
     
     self.standartResolutionImageURL = standardResInfo[kURL]? standardResInfo[kURL] : nil;
-    standardResolutionImageFrameSize = CGSizeMake([standardResInfo[kWidth] floatValue], [standardResInfo[kHeight] floatValue]);
+    //standardResolutionImageFrameSize = CGSizeMake([standardResInfo[kWidth] floatValue], [standardResInfo[kHeight] floatValue]);
 }
 
 - (void)initializeVideos:(NSDictionary *)videosInfo
 {
     NSDictionary *lowResInfo = videosInfo[kLowResolution];
     self.lowResolutionVideoURL = lowResInfo[kURL] ? lowResInfo[kURL] : nil;
-    lowResolutionVideoFrameSize = CGSizeMake([lowResInfo[kWidth] floatValue], [lowResInfo[kHeight] floatValue]);
+    //lowResolutionVideoFrameSize = CGSizeMake([lowResInfo[kWidth] floatValue], [lowResInfo[kHeight] floatValue]);
     
     NSDictionary *standardResInfo = videosInfo[kStandardResolution];
     self.standartResolutionVideoURL = standardResInfo[kURL]? standardResInfo[kURL] : nil;
-    standardResolutionVideoFrameSize = CGSizeMake([standardResInfo[kWidth] floatValue], [standardResInfo[kHeight] floatValue]);
+    //standardResolutionVideoFrameSize = CGSizeMake([standardResInfo[kWidth] floatValue], [standardResInfo[kHeight] floatValue]);
 }
 
+/* This need to be deleted
+ 
 #pragma mark Download content
 -(void) downLoadImages
 {
@@ -168,6 +167,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
         NSLog(@"Downloaded: %f", (double)totalBytesWritten/totalBytesExpectedToWrite);
     }
 }
+ */
 
 #pragma Comparing
 
@@ -176,6 +176,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     return [super isEqualToModel:media];
 }
 
+/* Again - some trash. Now all the image data sets to imageData directly
 #pragma mark Setters
 -(void) setPhoto:(UIImage *)photo
 {
@@ -183,5 +184,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     NSData *imageData = UIImageJPEGRepresentation(photo, 1.0);
     self.standartResolutionImageData = imageData;
 }
+ */
 
 @end

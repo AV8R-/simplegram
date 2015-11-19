@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface SGLoginViewController : UIViewController
+
+/**
+ * webView для ввода логина и пароля
+**/
 @property (weak, nonatomic) IBOutlet UIWebView *loginWebView;
 
 

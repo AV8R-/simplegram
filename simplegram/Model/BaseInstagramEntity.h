@@ -15,42 +15,35 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, retain) NSManagedObjectContext *moc;
 
+/**
+ * Конструктор для поиска в БД или создания сущности Instagram API с указанным Instagram ID
+ * @param modelClass - указать конкретный класс создаваемой сущности
+ * @param instagramId - ID сущности, полученный с сервера Instagram
+ * @param context - контекст Core Data в котором создается или ищется сущность
+**/
 +(id) findOrCreateEntity:(Class)modelClass
                   WithId:(NSString*)instagramId
                inContext:(NSManagedObjectContext *)context;
 
 /**
- * Виртуальный констркутор, переопределен в подкласах
- * param JSON с полями объекта
- **/
-- (instancetype)initWithInfo:(NSDictionary *)info;
-
-/**
- * Конструктор для создания/загрузки сущности в указанном ManagedObjectContext
-**/
-- (instancetype)initWithInfo:(NSDictionary *)info managedObjectContext:(NSManagedObjectContext* _Nullable)moc;
-
-/**
- * Базовый констркутор создает объект определенноо подласса
- * @param info - JSON с полями объекта
- * @param modelClass - конкретный класс
- **/
-- (instancetype)initWithInfo:(NSDictionary *)info subclass:(Class)modelClass withMoc:(NSManagedObjectContext *)moc;
-
-/**
- *Возвращает массив сущностей инстаграма с указанным ID, которые уже храняться в БД
+ *Возвращает массив сущностей инстаграма с указанным ID, которые уже хранятся в БД
  *@param modelClass - конкретный класс
  *@param instagramID
  **/
-+(NSArray *)findExsistingEntity:(Class)modelClass WithInstagramId:(NSString *)instagramID;
++(NSArray *)findExsistingEntity:(Class)modelClass
+                WithInstagramId:(NSString *)instagramID;
 
 /**
+ * Абстрактный метод, должен быть переопределен в подклассах
  * Вызывается каждый раз при обновлении JSON'ом с сервера Instagram
  * @param info - JSON конкрентной сущности
  **/
--(void) updateDetails:(NSDictionary *)info;
+-(void)updateDetails:(NSDictionary *)info;
 
-- (BOOL)isEqualToModel:(BaseInstagramEntity *)model;
+/**
+ * Проверка сущностей на тождественность
+**/
+-(BOOL)isEqualToModel:(BaseInstagramEntity *)model;
 
 @end
 

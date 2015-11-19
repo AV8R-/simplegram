@@ -12,6 +12,7 @@
 @implementation InstagramUser
 @synthesize photo;
 
+/* мусор. Логика создания была полностью перенесена в базовый класс
 - (instancetype)initWithInfo:(NSDictionary *)info
 {
     self = [self initWithInfo:info managedObjectContext:nil];
@@ -29,6 +30,7 @@
     
     return self;
 }
+ */
 
 - (void)updateDetails:(NSDictionary *)info
 {

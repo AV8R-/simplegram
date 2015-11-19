@@ -90,7 +90,6 @@
 		8453A1751BFCBC9B0055CA2F /* SGImporterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SGImporterDelegate.h; path = API/SGImporterDelegate.h; sourceTree = "<group>"; };
 		84F0908B1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BaseInstagramEntity+CoreDataProperties.h"; path = "Model/BaseInstagramEntity+CoreDataProperties.h"; sourceTree = "<group>"; };
 		84F0908C1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "BaseInstagramEntity+CoreDataProperties.m"; path = "Model/BaseInstagramEntity+CoreDataProperties.m"; sourceTree = "<group>"; };
-		84F0908E1BF9155000FEC817 /* InstagramMediaDownloadDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = InstagramMediaDownloadDelegate.h; path = Model/InstagramMediaDownloadDelegate.h; sourceTree = "<group>"; };
 		84F0908F1BF9B51C00FEC817 /* SGFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGFeedTableViewController.h; path = Controller/SGFeedTableViewController.h; sourceTree = "<group>"; };
 		84F090901BF9B51C00FEC817 /* SGFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGFeedTableViewController.m; path = Controller/SGFeedTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,7 +152,6 @@
 				8408E2631BF7B8020034D776 /* InstagramMedia+CoreDataProperties.m */,
 				8408E2641BF7B8020034D776 /* InstagramMedia.h */,
 				8408E2651BF7B8020034D776 /* InstagramMedia.m */,
-				84F0908E1BF9155000FEC817 /* InstagramMediaDownloadDelegate.h */,
 			);
 			name = InstagramMedia;
 			sourceTree = "<group>";

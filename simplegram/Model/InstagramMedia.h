@@ -11,8 +11,6 @@
 #import <UIKit/UIKit.h>
 #import "BaseInstagramEntity.h"
 
-@protocol InstagramMediaDownloadDelegate;
-
 @class InstagramComment, InstagramUser;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,36 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface InstagramMedia : BaseInstagramEntity <NSURLSessionDownloadDelegate>
 
 /**
- * Передает события загрузки изображений, миниатюры и видео
+ * Указатель на фотографию поста
 **/
-@property (nonatomic, weak) id<InstagramMediaDownloadDelegate> downloadDelegate;
-
-/**
- * Размер миниатюры
-**/
-@property (nonatomic, readonly) CGSize thumbnailFrameSize;
-
-/**
- *  Размер картинки с маленьким разрешением
- */
-@property (nonatomic, readonly) CGSize lowResolutionImageFrameSize;
-
-/**
- * Стандартный размер картинки
-**/
-@property (nonatomic, readonly) CGSize standardResolutionImageFrameSize;
-
-/**
- * Размер видео с маленьким разрешением
-**/
-@property (nonatomic, readonly) CGSize lowResolutionVideoFrameSize;
-
-/**
- * Размер видео в стандартном разрешении
-**/
-@property (nonatomic, readonly) CGSize standardResolutionVideoFrameSize;
-
-@property (nonatomic, strong) UIImage *photo;
+@property (nonatomic, retain) UIImage *photo;
 
 - (BOOL)isEqualToMedia:(InstagramMedia *)media;
 

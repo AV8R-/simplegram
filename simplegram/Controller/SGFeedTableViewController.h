@@ -13,14 +13,30 @@
 
 @interface SGFeedTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SGImporterDelegate>
 
-@property (strong, nonatomic) IBOutlet UITableView *feedTableView;
-@property (strong, nonatomic) NSMutableArray *feed;
-@property (strong, nonatomic) NSMutableArray *feedUserThumbnails;
-@property (strong, nonatomic) NSMutableArray *feedStandartResolutionImages;
-@property (nonatomic, strong) InstagramAPI *api;
 
+@property (strong, nonatomic) IBOutlet UITableView *feedTableView;
+
+/**
+ * Массив, в котором храняться объекты InstagramMedia. 
+ * Фид, полученный с сервера
+**/
+@property (strong, nonatomic) NSMutableArray *feed;
+//@property (nonatomic, strong) InstagramAPI *api;
+
+/**
+ * Основной MOC используется для получения данных из БД, Оперативной работы с БД
+**/
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
+/**
+ * Фоновый MOC используется для фоновой подгрузки новых данных с севрера Instagram
+**/
 @property (nonatomic, strong) NSManagedObjectContext *backgroundManagedObjectContext;
+
+/**
+ * Управляет загрузками данных с севера инстаграмм
+ * Маппит полученные JSON-ки в сущности Core Data
+**/
 @property (nonatomic, strong) SGImporter *importer;
 
 @end

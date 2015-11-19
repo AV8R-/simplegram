@@ -41,6 +41,7 @@
 * Если есть - она обновляется полученным JSON'ом
 * Если нет - создается новая
 */
+/* Trash to init entity use findOrCreateEntity: WithId: inContext:
 - (instancetype)initWithInfo:(NSDictionary *)info subclass:(Class)modelClass withMoc:(NSManagedObjectContext*)managedObjectContext
 {
     if(info && [info isKindOfClass:[NSDictionary class]]) {
@@ -67,6 +68,7 @@
     
     return self;
 }
+ */
 
 +(NSArray *)findExsistingEntity:(Class)modelClass WithInstagramId:(NSString *)instagramID managedObjectContext:(NSManagedObjectContext *)moc
 {

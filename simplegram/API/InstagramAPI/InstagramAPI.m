@@ -57,6 +57,8 @@
         AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
         self.managedObjectContext = [[NSManagedObjectContext alloc] init];
         self.managedObjectContext.persistentStoreCoordinator = [[appDelegate managedObjectContext] persistentStoreCoordinator];
+        
+        //TODO: Попытаться залогинится с cliendID. Нужно для того, чтобы не вводить пароль повторно при каждом входе в приложение.
     }
     
     return self;
