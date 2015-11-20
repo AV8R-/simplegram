@@ -338,4 +338,18 @@
                    failure:failure];
 }
 
+#pragma mark -
+#pragma mark Comments
+- (void) sendComment:(NSString*)text
+           toMediaID:(NSString*)mediaID
+         withSuccess:(void(^)(NSDictionary *serverResponse))success
+             failure:(void(^)(NSError* error, NSInteger serverStatusCode))failure
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObjects:@[text] forKeys:@[@"text"]];
+    [self postPath:[NSString stringWithFormat:@"media/%@/comments",mediaID]
+        parameters:params
+     responseModel:nil
+           success:success
+           failure:failure];
+}
 @end

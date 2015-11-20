@@ -272,8 +272,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hl2-XX-XQA">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Leave a comment" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="BQ6-EP-ass">
+                                <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="obv-Ci-vac"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="uXk-ky-eyK" id="Lnh-Jk-WhB"/>
+                                </connections>
+                            </textField>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hl2-XX-XQA">
+                                <rect key="frame" x="0.0" y="108" width="320" height="460"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -331,26 +343,17 @@
                                     <outlet property="delegate" destination="uXk-ky-eyK" id="U1x-lp-7Yz"/>
                                 </connections>
                             </tableView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Leave a comment" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="BQ6-EP-ass">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                                <animations/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="obv-Ci-vac"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="BQ6-EP-ass" firstAttribute="top" secondItem="4xH-fU-t7c" secondAttribute="bottom" id="2Mx-GZ-aj4"/>
                             <constraint firstAttribute="trailing" secondItem="hl2-XX-XQA" secondAttribute="trailing" id="6qy-UN-gAd"/>
                             <constraint firstItem="hl2-XX-XQA" firstAttribute="leading" secondItem="Nns-c5-vGK" secondAttribute="leading" id="6u4-OO-DcC"/>
-                            <constraint firstItem="vno-Ss-goE" firstAttribute="top" secondItem="BQ6-EP-ass" secondAttribute="bottom" id="AcO-V6-jmy"/>
                             <constraint firstItem="BQ6-EP-ass" firstAttribute="leading" secondItem="Nns-c5-vGK" secondAttribute="leading" id="FpU-Uz-DVU"/>
                             <constraint firstAttribute="trailing" secondItem="BQ6-EP-ass" secondAttribute="trailing" id="Jq9-4j-Ho8"/>
-                            <constraint firstItem="hl2-XX-XQA" firstAttribute="top" secondItem="Nns-c5-vGK" secondAttribute="top" id="aBG-go-be8"/>
-                            <constraint firstItem="BQ6-EP-ass" firstAttribute="top" secondItem="hl2-XX-XQA" secondAttribute="bottom" id="nKN-Kj-UOQ"/>
+                            <constraint firstAttribute="bottom" secondItem="hl2-XX-XQA" secondAttribute="bottom" id="oKr-Gc-OK5"/>
+                            <constraint firstItem="hl2-XX-XQA" firstAttribute="top" secondItem="BQ6-EP-ass" secondAttribute="bottom" id="swd-93-gN4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Comments" id="I7x-5R-FCJ">

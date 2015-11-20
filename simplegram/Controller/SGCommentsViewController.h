@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SGBaseViewController.h"
 
-@interface SGCommentsViewController : SGBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface SGCommentsViewController : SGBaseViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *commentsTableView;
 @property (nonatomic, strong) NSArray *comments;

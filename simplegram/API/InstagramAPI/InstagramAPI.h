@@ -84,4 +84,12 @@
                      success:(void (^)(NSArray *media))success
                      failure:(void (^)(NSError* error, NSInteger serverStatusCode))failure;
 
+/**
+ * Отправляет запрос на создание комментария
+**/
+- (void) sendComment:(NSString*)text
+           toMediaID:(NSString*)mediaID
+         withSuccess:(void(^)(NSDictionary *serverResponse))success
+             failure:(void(^)(NSError* error, NSInteger serverStatusCode))failure;
+
 @end

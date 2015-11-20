@@ -16,6 +16,7 @@
 @interface SGCommentsViewController ()
 {
     InstagramAPI *api;
+    NSString *instagramId;
 }
 
 @end
@@ -44,6 +45,7 @@
     if ([[InstagramAPI sharedInstance] isSessionValid]) {
         [self.commentPlaceholder setEnabled:YES];
         self.commentPlaceholder.placeholder = @"Leave a comment";
+        self.commentPlaceholder.returnKeyType = UIReturnKeySend;
     }
     else {
         [self.commentPlaceholder setEnabled:NO];
@@ -62,6 +64,8 @@
     InstagramMedia *media = [self.managedObjectContext objectWithID:mediaID];
     comments = [media getCommentsWithManagedObjectContext:self.managedObjectContext];
     [self.commentsTableView reloadData];
+    
+    instagramId = media.instagramId;
 }
 
 #pragma mark tableViewDataSource
@@ -137,6 +141,17 @@
     cell.timestampLabel.text = [self stringIntervalSinceDate:comment.createdDate];
 }
 
+#pragma mark Text Field
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [[InstagramAPI sharedInstance] sendComment:textField.text
+                                     toMediaID:instagramId
+                                   withSuccess:nil //TODO: Обновить комментарии.
+                                       failure:nil];
+    textField.text = @"";
+    [textField resignFirstResponder];
+    return NO;
+}
 /*
 #pragma mark - Navigation
 
