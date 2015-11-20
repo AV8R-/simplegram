@@ -16,6 +16,9 @@
 #import "SGCommentsViewController.h"
 
 @interface SGFeedTableViewController ()
+{
+    double progressValues[30];
+}
 
 @end
 
@@ -203,11 +206,14 @@
         cell.photoImageView.image = [UIImage imageWithData:media.standartResolutionImageData];
     }
     else {
+        cell.downloadProgressView.progress = progressValues[indexPath.section];
+        
         //TODO: Добавить индикатор загрузки
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSURLSession *session = [NSURLSession sessionWithConfiguration:config
-                                                              delegate:nil
+                                                              delegate:self
                                                          delegateQueue:nil];
+        //NSURLSessionDownloadTask *getStandartResolutionImageTask = [session downloadTaskWithURL:[NSURL URLWithString:media.standartResolutionImageURL]];
         
         NSURLSessionDataTask *getStandartResolutionImageTask = [session dataTaskWithURL: [NSURL URLWithString:media.standartResolutionImageURL]
                                                                       completionHandler:^(NSData *data,
@@ -228,6 +234,27 @@
         [getStandartResolutionImageTask resume];
     }
 
+}
+
+-(void)URLSession:(NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location
+{
+    
+}
+
+-(void)URLSession:(NSURLSession *)session
+     downloadTask:(NSURLSessionDownloadTask *)downloadTask
+     didWriteData:(int64_t)bytesWritten
+totalBytesWritten:(int64_t)totalBytesWritten
+totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
+{    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        SGPhotoTableViewCell *cell = (SGPhotoTableViewCell*)[self tableView:self.feedTableView cellForRowAtIndexPath:indexPath];
+        progressValues[indexPath.section] = (double)totalBytesWritten/(double)totalBytesExpectedToWrite;
+        NSLog(@"%f / %f", (double)totalBytesWritten,
+              (double)totalBytesExpectedToWrite);
+        [self.feedTableView reloadData];
+    });
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -267,44 +294,8 @@
     return view;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([segue.identifier  isEqual: @"comments_segue"]) {
         NSInteger mediaIndexInFeedArray = 0;

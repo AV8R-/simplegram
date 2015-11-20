@@ -27,39 +27,4 @@
     _downloadProgressView.hidden = YES;
 }
 
--(void) setImageWithURL:(NSURL *)imageURL
-{
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config
-                                                          delegate:self
-                                                     delegateQueue:nil];
-    NSURLSessionDownloadTask *getStandartResolutionImageTask = [session downloadTaskWithURL:imageURL];
-    [getStandartResolutionImageTask resume];
-}
-
--(void)URLSession:(NSURLSession *)session
-     downloadTask:(NSURLSessionDownloadTask *)downloadTask
-     didWriteData:(int64_t)bytesWritten
-totalBytesWritten:(int64_t)totalBytesWritten
-totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
-{
-    [_downloadProgressView setProgress:(float)totalBytesWritten/totalBytesExpectedToWrite];
-}
-
--(void)URLSession:(NSURLSession *)session
-     downloadTask:(NSURLSessionDownloadTask *)downloadTask
-didFinishDownloadingToURL:(NSURL *)location
-{
-    NSData *imageData = [NSData dataWithContentsOfURL:location];
-    UIImage *image = [UIImage imageWithData:imageData];
-    [_photoImageView setImage:image];
-    _downloadProgressView.hidden = YES;
-}
-
--(void) prepareForReuse
-{
-    self.photoImageView.image = nil;
-}
-
-
 @end

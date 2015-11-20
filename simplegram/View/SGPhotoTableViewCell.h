@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InstagramMedia.h"
 
-@interface SGPhotoTableViewCell : UITableViewCell <NSURLSessionDownloadDelegate>
+@interface SGPhotoTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (weak, nonatomic) IBOutlet UIProgressView *downloadProgressView;
 @property (weak, nonatomic) IBOutlet UIButton *commentsButton;

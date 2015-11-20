@@ -14,26 +14,6 @@
 @implementation InstagramComment
 @synthesize moc;
 
-/* Мусор. Вся логика создания была перенесена в базовый класс
--(instancetype) initWithInfo:(NSDictionary *)info
-{
-    self = [self initWithInfo:info managedObjectContext:nil];
-    
-    return self;
-}
-
-- (instancetype)initWithInfo:(NSDictionary *)info managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-{
-    self = [super initWithInfo:info subclass:[InstagramComment class] withMoc:managedObjectContext];
-    
-    if(self && info && [info isKindOfClass:[NSDictionary class]]) {
-        //[self updateDetails:info];
-    }
-    
-    return self;
-}
- */
-
 -(void) updateDetails:(NSDictionary *)info
 {
     if (info && [info isKindOfClass:[NSDictionary class]] && self.createdDate == nil) {

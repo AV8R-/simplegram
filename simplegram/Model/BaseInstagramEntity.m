@@ -35,41 +35,6 @@
     return model;
 }
 
-/*
-* Вызывается в каждом конкретном классе
-* В первую очередь проверяет есть ли эта сущность уже в БД
-* Если есть - она обновляется полученным JSON'ом
-* Если нет - создается новая
-*/
-/* Trash to init entity use findOrCreateEntity: WithId: inContext:
-- (instancetype)initWithInfo:(NSDictionary *)info subclass:(Class)modelClass withMoc:(NSManagedObjectContext*)managedObjectContext
-{
-    if(info && [info isKindOfClass:[NSDictionary class]]) {
-        NSString *instagramID = SGNotNull(info[kID]) ? [[NSString alloc] initWithString:info[kID]] : nil;
-        
-        NSArray *sameEntities = [BaseInstagramEntity findExsistingEntity:modelClass WithInstagramId:instagramID managedObjectContext:managedObjectContext];
-        if (sameEntities && [sameEntities count] > 0) {
-            self = [sameEntities objectAtIndex:0];
-        }
-        else {
-            self = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(modelClass)
-                                                 inManagedObjectContext:managedObjectContext];
-            self.instagramId = instagramID;
-        }
-        
-        if (managedObjectContext != nil) {
-            self.moc = managedObjectContext;
-        }
-        else {
-            self.moc = [[NSManagedObjectContext alloc] init];
-            self.moc.persistentStoreCoordinator = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) persistentStoreCoordinator];
-        }
-    }
-    
-    return self;
-}
- */
-
 +(NSArray *)findExsistingEntity:(Class)modelClass WithInstagramId:(NSString *)instagramID managedObjectContext:(NSManagedObjectContext *)moc
 {
     [moc.persistentStoreCoordinator lock];

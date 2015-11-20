@@ -12,7 +12,7 @@
 #import "SGImporter.h"
 #import "SGBaseTableViewController.h"
 
-@interface SGFeedTableViewController : SGBaseTableViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SGImporterDelegate>
+@interface SGFeedTableViewController : SGBaseTableViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SGImporterDelegate, NSURLSessionDataDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UITableView *feedTableView;

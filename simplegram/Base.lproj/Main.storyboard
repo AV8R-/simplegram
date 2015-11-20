@@ -137,10 +137,13 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="603"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="tHg-jo-CtB">
-                                            <rect key="frame" x="213" y="128" width="150" height="2"/>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="tHg-jo-CtB">
+                                            <rect key="frame" x="85" y="256" width="150" height="2"/>
                                             <animations/>
-                                            <color key="progressTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="150" id="2M8-sq-brx"/>
+                                            </constraints>
+                                            <color key="progressTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </progressView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000000 comments" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="80" translatesAutoresizingMaskIntoConstraints="NO" id="2Xm-4b-LGg">
                                             <rect key="frame" x="41" y="527" width="114" height="15"/>
@@ -209,10 +212,12 @@
                                         <constraint firstItem="0DO-64-OW4" firstAttribute="leading" secondItem="UfQ-dR-9ZK" secondAttribute="leading" constant="8" id="Xmd-ZP-iKG"/>
                                         <constraint firstItem="2Xm-4b-LGg" firstAttribute="centerY" secondItem="0DO-64-OW4" secondAttribute="centerY" id="a2v-Gw-ATu"/>
                                         <constraint firstItem="5h9-F9-UUW" firstAttribute="top" secondItem="UfQ-dR-9ZK" secondAttribute="top" id="ahg-jD-WgH"/>
+                                        <constraint firstItem="tHg-jo-CtB" firstAttribute="centerX" secondItem="5h9-F9-UUW" secondAttribute="centerX" id="hf6-CK-cnG"/>
                                         <constraint firstAttribute="trailing" secondItem="Jxq-xY-0Z1" secondAttribute="trailing" constant="8" id="nU7-As-FcP"/>
                                         <constraint firstItem="Jxq-xY-0Z1" firstAttribute="leading" secondItem="rzC-sU-dp6" secondAttribute="trailing" constant="8" id="nWk-0m-s3S"/>
                                         <constraint firstItem="Lu6-pY-qdv" firstAttribute="leading" secondItem="UfQ-dR-9ZK" secondAttribute="leading" constant="8" id="nuE-5n-QHf"/>
                                         <constraint firstItem="0DO-64-OW4" firstAttribute="top" secondItem="5h9-F9-UUW" secondAttribute="bottom" constant="8" id="ohp-tD-faR"/>
+                                        <constraint firstItem="tHg-jo-CtB" firstAttribute="centerY" secondItem="5h9-F9-UUW" secondAttribute="centerY" id="ptZ-IE-Vy5"/>
                                         <constraint firstItem="5h9-F9-UUW" firstAttribute="leading" secondItem="UfQ-dR-9ZK" secondAttribute="leading" id="qcj-dl-NwG"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="rzC-sU-dp6" secondAttribute="bottom" constant="18" id="uQf-Wp-WeK"/>
                                     </constraints>

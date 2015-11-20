@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 **/
 -(NSArray*) getCommentsWithManagedObjectContext:(NSManagedObjectContext*)moc;
 
+
 - (BOOL)isEqualToMedia:(InstagramMedia *)media;
 
 @end
