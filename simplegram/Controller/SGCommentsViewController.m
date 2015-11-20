@@ -11,8 +11,12 @@
 #import "InstagramComment.h"
 #import "InstagramUser.h"
 #import "InstagramMedia.h"
+#import "InstagramAPI.h"
 
 @interface SGCommentsViewController ()
+{
+    InstagramAPI *api;
+}
 
 @end
 
@@ -23,12 +27,7 @@
 {
     self = [super initWithCoder:aDecoder];
     
-    return self;
-}
-
--(instancetype) init
-{
-    self = [super init];
+    api = [InstagramAPI sharedInstance];
     
     return self;
 }
@@ -37,6 +36,19 @@
     [super viewDidLoad];
     
     [self loadCommetns];
+}
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ([[InstagramAPI sharedInstance] isSessionValid]) {
+        [self.commentPlaceholder setEnabled:YES];
+        self.commentPlaceholder.placeholder = @"Leave a comment";
+    }
+    else {
+        [self.commentPlaceholder setEnabled:NO];
+        self.commentPlaceholder.placeholder = @"Sign in to leave a comment";
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -72,7 +84,7 @@
 }
 
 #pragma mark Configuring Cell Height
-/*
+
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 60.0;
@@ -82,14 +94,15 @@
 {
     return [self heightForCellAtIndexPath:indexPath];
 }
- */
+ 
+ 
 
 -(CGFloat)heightForCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static SGCommentCell *sizingCell = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sizingCell = [self.commentsTableView dequeueReusableCellWithIdentifier:@"commet_cell" forIndexPath:indexPath];
+    static dispatch_once_t onceCommentToken;
+    dispatch_once(&onceCommentToken, ^{
+        sizingCell = [self.commentsTableView dequeueReusableCellWithIdentifier:@"comment_cell"];
     });
     
     [self configureCommentCell:sizingCell AthIndexPath:indexPath];

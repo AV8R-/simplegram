@@ -35,5 +35,14 @@
 **/
 @property (nonatomic, strong) SGImporter *importer;
 
+/**
+ * Показывает окно с логином или разлогинивает пользователя.
+**/
+- (IBAction)logInOrout:(id)sender;
+
+/**
+ * Кнопка логина или разлогина. Нужно менять название каждый раз, когда состояние сессии изменяется.
+**/
+@property (weak, nonatomic) IBOutlet UIButton *logInOrOutButton;
 
 @end

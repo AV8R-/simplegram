@@ -64,7 +64,9 @@
     
     if (timestamp <= 60)
     {
-        sinceString = [NSString stringWithFormat:@"%im ago", (int)timestamp];
+        sinceString = timestamp > 0 ?
+        [NSString stringWithFormat:@"%im ago", (int)timestamp] :
+        @"just now";
     }
     else
     {

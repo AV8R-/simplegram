@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UITableView *commentsTableView;
 @property (nonatomic, strong) NSArray *comments;
 @property (nonatomic, retain) NSManagedObjectID *mediaID;
+@property (weak, nonatomic) IBOutlet UITextField *commentPlaceholder;
 
 @end

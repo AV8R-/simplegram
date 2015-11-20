@@ -36,7 +36,6 @@
     return self;
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -50,6 +49,12 @@
 
 -(void) viewWillAppear:(BOOL)animated
 {
+    if ([[InstagramAPI sharedInstance] isSessionValid]) {
+        self.logInOrOutButton.titleLabel.text = @"LogOut";
+    }
+    else {
+        self.logInOrOutButton.titleLabel.text = @"LogIn";
+    }
     self.navigationController.hidesBarsOnSwipe = YES;
     [super viewWillAppear:animated];
 }
@@ -301,21 +306,27 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSInteger mediaIndexInFeedArray = 0;
-    
-    if([sender isKindOfClass:[UIButton class]]) {
-        mediaIndexInFeedArray = [(UIButton*)sender tag];
+    if([segue.identifier  isEqual: @"comments_segue"]) {
+        NSInteger mediaIndexInFeedArray = 0;
+        
+        if([sender isKindOfClass:[UIButton class]]) {
+            mediaIndexInFeedArray = [(UIButton*)sender tag];
+        }
+        
+        InstagramMedia *media = [self.feed objectAtIndex:mediaIndexInFeedArray];
+        
+        SGCommentsViewController *destinationController = [segue destinationViewController];
+        destinationController.mediaID = media.objectID;
     }
-    
-    InstagramMedia *media = [self.feed objectAtIndex:mediaIndexInFeedArray];
-    
-    SGCommentsViewController *destinationController = [segue destinationViewController];
-    destinationController.mediaID = media.objectID;
-    
-    
-    //destinationController.mediaID
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
 }
 
+#pragma mark Actions
+- (IBAction)logInOrout:(id)sender {
+    if ([self.api isSessionValid]) {
+        [self.api logout];
+    }
+    else {
+        [self performSegueWithIdentifier:@"login_segue" sender:self];
+    }
+}
 @end

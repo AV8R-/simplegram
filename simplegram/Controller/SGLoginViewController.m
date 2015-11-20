@@ -23,6 +23,18 @@
     [self.loginWebView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
 
+-(void) viewWillAppear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = YES;
+    [super viewWillAppear:animated];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = NO;
+    [super viewWillDisappear:animated];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -30,6 +42,9 @@
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     [[InstagramAPI sharedInstance] receivedValidAccessTokenFromURL:request.URL];
+    
+    if([[InstagramAPI sharedInstance] isSessionValid])
+       [self.navigationController popToRootViewControllerAnimated:NO];
     return YES;
 }
 
