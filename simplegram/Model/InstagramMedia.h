@@ -34,6 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 **/
 -(InstagramComment*) getCaptionwithManagedObjectContext:(NSManagedObjectContext*)moc;
 
+/**
+ * Получает комментарии к медиа. Пока не сортированные по дате.
+**/
+-(NSArray*) getCommentsWithManagedObjectContext:(NSManagedObjectContext*)moc;
+
 - (BOOL)isEqualToMedia:(InstagramMedia *)media;
 
 @end

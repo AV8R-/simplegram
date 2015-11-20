@@ -29,6 +29,11 @@
 		8453A1681BFBB7120055CA2F /* SGUserThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453A1671BFBB7120055CA2F /* SGUserThumbnailImageView.m */; settings = {ASSET_TAGS = (); }; };
 		8453A16E1BFBC5E50055CA2F /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453A16D1BFBC5E50055CA2F /* comment.png */; settings = {ASSET_TAGS = (); }; };
 		8453A1741BFCA05E0055CA2F /* SGImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453A1731BFCA05E0055CA2F /* SGImporter.m */; settings = {ASSET_TAGS = (); }; };
+		846E58251BFE733F00FC5448 /* SGCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 846E58241BFE733F00FC5448 /* SGCommentCell.m */; settings = {ASSET_TAGS = (); }; };
+		846E58281BFE740A00FC5448 /* SGCommentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846E58271BFE740A00FC5448 /* SGCommentsViewController.m */; settings = {ASSET_TAGS = (); }; };
+		846E582B1BFE77BE00FC5448 /* SGBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846E582A1BFE77BE00FC5448 /* SGBaseViewController.m */; settings = {ASSET_TAGS = (); }; };
+		846E582F1BFE880400FC5448 /* SGBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846E582E1BFE880400FC5448 /* SGBaseTableViewController.m */; settings = {ASSET_TAGS = (); }; };
+		846E58321BFE882D00FC5448 /* SGBaseControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 846E58311BFE882D00FC5448 /* SGBaseControllerManager.m */; settings = {ASSET_TAGS = (); }; };
 		84F0908D1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F0908C1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m */; settings = {ASSET_TAGS = (); }; };
 		84F090911BF9B51C00FEC817 /* SGFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F090901BF9B51C00FEC817 /* SGFeedTableViewController.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
@@ -88,6 +93,16 @@
 		8453A1721BFCA05E0055CA2F /* SGImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGImporter.h; path = API/SGImporter.h; sourceTree = "<group>"; };
 		8453A1731BFCA05E0055CA2F /* SGImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGImporter.m; path = API/SGImporter.m; sourceTree = "<group>"; };
 		8453A1751BFCBC9B0055CA2F /* SGImporterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SGImporterDelegate.h; path = API/SGImporterDelegate.h; sourceTree = "<group>"; };
+		846E58231BFE733F00FC5448 /* SGCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGCommentCell.h; path = View/SGCommentCell.h; sourceTree = "<group>"; };
+		846E58241BFE733F00FC5448 /* SGCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGCommentCell.m; path = View/SGCommentCell.m; sourceTree = "<group>"; };
+		846E58261BFE740A00FC5448 /* SGCommentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGCommentsViewController.h; path = Controller/SGCommentsViewController.h; sourceTree = "<group>"; };
+		846E58271BFE740A00FC5448 /* SGCommentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGCommentsViewController.m; path = Controller/SGCommentsViewController.m; sourceTree = "<group>"; };
+		846E58291BFE77BE00FC5448 /* SGBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGBaseViewController.h; path = Controller/SGBaseViewController.h; sourceTree = "<group>"; };
+		846E582A1BFE77BE00FC5448 /* SGBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGBaseViewController.m; path = Controller/SGBaseViewController.m; sourceTree = "<group>"; };
+		846E582D1BFE880400FC5448 /* SGBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGBaseTableViewController.h; path = Controller/SGBaseTableViewController.h; sourceTree = "<group>"; };
+		846E582E1BFE880400FC5448 /* SGBaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGBaseTableViewController.m; path = Controller/SGBaseTableViewController.m; sourceTree = "<group>"; };
+		846E58301BFE882D00FC5448 /* SGBaseControllerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGBaseControllerManager.h; path = Controller/SGBaseControllerManager.h; sourceTree = "<group>"; };
+		846E58311BFE882D00FC5448 /* SGBaseControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGBaseControllerManager.m; path = Controller/SGBaseControllerManager.m; sourceTree = "<group>"; };
 		84F0908B1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BaseInstagramEntity+CoreDataProperties.h"; path = "Model/BaseInstagramEntity+CoreDataProperties.h"; sourceTree = "<group>"; };
 		84F0908C1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "BaseInstagramEntity+CoreDataProperties.m"; path = "Model/BaseInstagramEntity+CoreDataProperties.m"; sourceTree = "<group>"; };
 		84F0908F1BF9B51C00FEC817 /* SGFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGFeedTableViewController.h; path = Controller/SGFeedTableViewController.h; sourceTree = "<group>"; };
@@ -250,10 +265,13 @@
 		840A7DD91BF73DBD0068F8A4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				846E582C1BFE77C300FC5448 /* Base */,
 				8413D9DF1BF75C3000562BCF /* SGLoginViewController.h */,
 				8413D9E01BF75C3000562BCF /* SGLoginViewController.m */,
 				84F0908F1BF9B51C00FEC817 /* SGFeedTableViewController.h */,
 				84F090901BF9B51C00FEC817 /* SGFeedTableViewController.m */,
+				846E58261BFE740A00FC5448 /* SGCommentsViewController.h */,
+				846E58271BFE740A00FC5448 /* SGCommentsViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -282,8 +300,23 @@
 				8453A15B1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m */,
 				8453A1601BF9EE980055CA2F /* SGPhotoTableViewCell.h */,
 				8453A1611BF9EE980055CA2F /* SGPhotoTableViewCell.m */,
+				846E58231BFE733F00FC5448 /* SGCommentCell.h */,
+				846E58241BFE733F00FC5448 /* SGCommentCell.m */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		846E582C1BFE77C300FC5448 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				846E58291BFE77BE00FC5448 /* SGBaseViewController.h */,
+				846E582A1BFE77BE00FC5448 /* SGBaseViewController.m */,
+				846E582D1BFE880400FC5448 /* SGBaseTableViewController.h */,
+				846E582E1BFE880400FC5448 /* SGBaseTableViewController.m */,
+				846E58301BFE882D00FC5448 /* SGBaseControllerManager.h */,
+				846E58311BFE882D00FC5448 /* SGBaseControllerManager.m */,
+			);
+			name = Base;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -387,6 +420,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				846E58321BFE882D00FC5448 /* SGBaseControllerManager.m in Sources */,
 				840A7DBC1BF73D8A0068F8A4 /* simplegram.xcdatamodeld in Sources */,
 				840A7DE91BF749840068F8A4 /* InstagramAPIConstants.m in Sources */,
 				8408E26A1BF7B8020034D776 /* InstagramComment+CoreDataProperties.m in Sources */,
@@ -396,16 +430,20 @@
 				8453A15C1BF9C8260055CA2F /* SGFeedPostSectionHeaderView.m in Sources */,
 				8408E2691BF7B8020034D776 /* InstagramUser.m in Sources */,
 				840A7DE61BF7460D0068F8A4 /* InstagramAPI.m in Sources */,
+				846E582B1BFE77BE00FC5448 /* SGBaseViewController.m in Sources */,
 				8413D9E11BF75C3000562BCF /* SGLoginViewController.m in Sources */,
 				840A7DB31BF73D8A0068F8A4 /* AppDelegate.m in Sources */,
+				846E58251BFE733F00FC5448 /* SGCommentCell.m in Sources */,
 				84F090911BF9B51C00FEC817 /* SGFeedTableViewController.m in Sources */,
 				8453A1621BF9EE980055CA2F /* SGPhotoTableViewCell.m in Sources */,
 				8453A1681BFBB7120055CA2F /* SGUserThumbnailImageView.m in Sources */,
 				8408E2681BF7B8020034D776 /* InstagramUser+CoreDataProperties.m in Sources */,
 				8408E2671BF7B8020034D776 /* BaseInstagramEntity.m in Sources */,
 				8408E26B1BF7B8020034D776 /* InstagramComment.m in Sources */,
+				846E58281BFE740A00FC5448 /* SGCommentsViewController.m in Sources */,
 				84F0908D1BF8667400FEC817 /* BaseInstagramEntity+CoreDataProperties.m in Sources */,
 				840A7DB01BF73D8A0068F8A4 /* main.m in Sources */,
+				846E582F1BFE880400FC5448 /* SGBaseTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

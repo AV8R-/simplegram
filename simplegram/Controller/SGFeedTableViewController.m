@@ -13,6 +13,7 @@
 #import "InstagramMedia.h"
 #import "InstagramUser+CoreDataProperties.h"
 #import "InstagramComment+CoreDataProperties.h"
+#import "SGCommentsViewController.h"
 
 @interface SGFeedTableViewController ()
 
@@ -25,24 +26,6 @@
 {
     self = [super initWithCoder:aDecoder];
     
-    //Настройка контекстов, их синхронизация.
-    
-    self.managedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSMainQueueConcurrencyType];
-    self.backgroundManagedObjectContext = [self setupManagedObjectContextWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserverForName:NSManagedObjectContextDidSaveNotification
-     object:nil
-     queue:nil
-     usingBlock:^(NSNotification* note) {
-         NSManagedObjectContext *moc = self.managedObjectContext;
-         if (note.object != moc) {
-             [moc performBlock:^(){
-                 [moc mergeChangesFromContextDidSaveNotification:note];
-             }];
-         }
-     }];
-    
     //Настройка импортера данных
     
     self.importer = [[SGImporter alloc] initWithContext:self.backgroundManagedObjectContext];
@@ -50,51 +33,31 @@
     
     //Настрока tableView
 
-    self.feedTableView.estimatedRowHeight = 460.0;
-    self.feedTableView.rowHeight = UITableViewAutomaticDimension;
-    
     return self;
 }
 
-- (NSManagedObjectContext *)setupManagedObjectContextWithConcurrencyType:(NSManagedObjectContextConcurrencyType)concurrencyType
-{
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:concurrencyType];
-    managedObjectContext.persistentStoreCoordinator =
-    [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:appDelegate.managedObjectModel];
-    NSError* error;
-    [managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                                  configuration:nil
-                                                                            URL:[[appDelegate applicationDocumentsDirectory] URLByAppendingPathComponent:@"simplegram.sqlite"]
-                                                                        options:nil
-                                                                          error:&error];
-    if (error) {
-        NSLog(@"error: %@", error.localizedDescription);
-    }
-    return managedObjectContext;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    //[self.importer importPopular];
     [self fillFeedWithStore];
     
     UIRefreshControl * refreshControl = [[UIRefreshControl alloc] init];
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
     [refreshControl addTarget:self action:@selector(refreshFeed:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
-    
-    /**
-    
-    
-    /**/
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    self.navigationController.hidesBarsOnSwipe = YES;
+    [super viewWillAppear:animated];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    self.navigationController.hidesBarsOnSwipe = NO;
+    [super viewWillDisappear:animated];
 }
 
 -(void) loadingFeedDidEnd
@@ -109,28 +72,8 @@
 -(void) refreshFeed:(UIRefreshControl *)refreshControl
 {
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
-    
     [self.importer importPopular];
-    //[self updateStoreFromInstagramAPI];
 }
-
-/* Мусор
--(void) updateStoreFromInstagramAPI
-{
-    __weak __typeof(self)weakSelf = self;
-    
-    [weakSelf.api getPopularMediaWithSuccess:^(NSArray *result) {
-        [weakSelf fillFeedWithStore];
-        [weakSelf.refreshControl endRefreshing];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.feedTableView reloadData];
-        });
-    }
-                                 failure:^(NSError *e, NSInteger statusCode) {
-                                     NSLog(@"%@", e);
-                                 }];
-}
- */
 
 -(void) fillFeedWithStore
 {
@@ -150,7 +93,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -185,7 +127,7 @@
     static SGPhotoTableViewCell * sizingCell = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"photo_cell"];
+        sizingCell = [self.feedTableView dequeueReusableCellWithIdentifier:@"photo_cell"];
     });
     
     [self configurePhotoCell:sizingCell ForRowAtIndexPath:indexPath];
@@ -237,11 +179,12 @@
                                                                     attribute:NSLayoutAttributeNotAnAttribute
                                                                    multiplier:1.0
                                                                      constant: correctImageViewHeight]];
-    //TODO: Обновить количество лайков, комментов, установить описание и пользователя
+
     cell.likesCountNumber.text = [NSString stringWithFormat:@"%@", media.likesCount];
     cell.commentsCountLabel.text = [NSString stringWithFormat:@"%@", media.commentCount];
     user ? cell.creatorLabel.text = [NSString stringWithString:user.username] : 0;
     caption ? cell.captionLabel.text = [NSString stringWithString:caption.text] : 0;
+    cell.commentsButton.tag = indexPath.section;
 }
 
 /**
@@ -319,37 +262,6 @@
     return view;
 }
 
-#pragma mark Micellaneous
-
-/**
- * Возвращает строку "прошло врмени с момента публикации
-**/
--(NSString *) stringIntervalSinceDate:(NSDate *)date
-{
-    NSString *sinceString;
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSinceDate:date];
-    timestamp /= 60.0;
-    
-    if (timestamp <= 60)
-    {
-        sinceString = [NSString stringWithFormat:@"%im ago", (int)timestamp];
-    }
-    else
-    {
-        timestamp /= 60.0;
-        if(timestamp <= 24)
-        {
-            sinceString = [NSString stringWithFormat:@"%ih ago", (int)timestamp];
-        }
-        else
-        {
-            timestamp /= 24;
-            sinceString = [NSString stringWithFormat:@"%id ago", (int)timestamp];
-        }
-    }
-    return sinceString;
-}
-
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -384,14 +296,26 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSInteger mediaIndexInFeedArray = 0;
+    
+    if([sender isKindOfClass:[UIButton class]]) {
+        mediaIndexInFeedArray = [(UIButton*)sender tag];
+    }
+    
+    InstagramMedia *media = [self.feed objectAtIndex:mediaIndexInFeedArray];
+    
+    SGCommentsViewController *destinationController = [segue destinationViewController];
+    destinationController.mediaID = media.objectID;
+    
+    
+    //destinationController.mediaID
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
 
 @end

@@ -197,6 +197,22 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     return comment;
 }
 
+-(NSArray*) getCommentsWithManagedObjectContext:(NSManagedObjectContext*)moc
+{
+    NSMutableArray *comments = [[NSMutableArray alloc] init];
+    for (id commentId in self.comments) {
+        InstagramComment *comment;
+        if([commentId isKindOfClass:[NSManagedObjectID class]]) {
+            comment = [moc objectWithID:commentId];
+        }
+        else {
+            comment = (InstagramComment*)commentId;
+        }
+        [comments addObject:comment];
+    }
+    return [NSArray arrayWithArray:comments];
+}
+
 #pragma mark Comparing
 
 - (BOOL)isEqualToMedia:(InstagramMedia *)media

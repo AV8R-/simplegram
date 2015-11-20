@@ -47,5 +47,20 @@
     }
 }
 
+#pragma mark Getters
+-(InstagramUser*) getCreatorwithManagedObjectContext:(NSManagedObjectContext*)managedObjectContext
+{
+    id creatorID = self.user;
+    InstagramUser *creator;
+    if ([creator isKindOfClass:[NSManagedObjectID class]]) {
+        creator = [managedObjectContext objectWithID:creatorID];
+    }
+    else {
+        creator = (InstagramUser*)creatorID;
+    }
+    
+    return creator;
+}
+
 
 @end
