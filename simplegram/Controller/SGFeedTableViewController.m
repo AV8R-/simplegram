@@ -16,9 +16,6 @@
 #import "SGCommentsViewController.h"
 
 @interface SGFeedTableViewController ()
-{
-    double progressValues[30];
-}
 
 @end
 
@@ -48,6 +45,8 @@
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to refresh"];
     [refreshControl addTarget:self action:@selector(refreshFeed:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+    
+    self.activeTasks = [[NSMutableArray alloc] init];
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -193,6 +192,13 @@
     user ? cell.creatorLabel.text = [NSString stringWithString:user.username] : 0;
     caption ? cell.captionLabel.text = [NSString stringWithString:caption.text] : 0;
     cell.commentsButton.tag = indexPath.section;
+    
+    NSDictionary *downloadTaskInfo = [self getInfoForDownloadTaskAtIndexPath:indexPath];
+    if(downloadTaskInfo) {
+        long downloadedSize = [(NSNumber*)downloadTaskInfo[@"downloadedSize"] longValue];
+        long totalSize = [(NSNumber*)downloadTaskInfo[@"totalSize"] longValue];
+        cell.downloadProgressView.progress = (double)downloadedSize / (double)totalSize;
+    }
 }
 
 /**
@@ -204,17 +210,18 @@
     InstagramMedia *media = [feed objectAtIndex:indexPath.section];
     if (media.standartResolutionImageData) {
         cell.photoImageView.image = [UIImage imageWithData:media.standartResolutionImageData];
+        cell.downloadProgressView.hidden = YES;
     }
-    else {
-        cell.downloadProgressView.progress = progressValues[indexPath.section];
+    else if ([self getInfoForDownloadTaskAtIndexPath:indexPath] == nil) {
+        cell.downloadProgressView.hidden = NO;
         
-        //TODO: Добавить индикатор загрузки
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSURLSession *session = [NSURLSession sessionWithConfiguration:config
                                                               delegate:self
                                                          delegateQueue:nil];
-        //NSURLSessionDownloadTask *getStandartResolutionImageTask = [session downloadTaskWithURL:[NSURL URLWithString:media.standartResolutionImageURL]];
+        NSURLSessionDownloadTask *getStandartResolutionImageTask = [session downloadTaskWithURL:[NSURL URLWithString:media.standartResolutionImageURL]];
         
+        /*
         NSURLSessionDataTask *getStandartResolutionImageTask = [session dataTaskWithURL: [NSURL URLWithString:media.standartResolutionImageURL]
                                                                       completionHandler:^(NSData *data,
                                                                                           NSURLResponse *response,
@@ -231,30 +238,20 @@
                                                                               }
                                                                           });
                                                                       }];
+         */
+        
+        NSMutableDictionary *downloadTaskInfo = [[NSMutableDictionary alloc] init];
+        [downloadTaskInfo setObject:getStandartResolutionImageTask forKey:@"downloadTask"];
+        [downloadTaskInfo setObject:[indexPath copy] forKey:@"indexPath"];
+        [downloadTaskInfo setObject:[NSNumber numberWithInt:999] forKey:@"totalSize"];
+        [downloadTaskInfo setObject:[NSNumber numberWithInt:0] forKey:@"downloadedSize"];
+        [downloadTaskInfo setObject:media forKey:@"media"];
+        
+        [self.activeTasks addObject:downloadTaskInfo];
+        
         [getStandartResolutionImageTask resume];
     }
 
-}
-
--(void)URLSession:(NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location
-{
-    
-}
-
--(void)URLSession:(NSURLSession *)session
-     downloadTask:(NSURLSessionDownloadTask *)downloadTask
-     didWriteData:(int64_t)bytesWritten
-totalBytesWritten:(int64_t)totalBytesWritten
-totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
-{    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        SGPhotoTableViewCell *cell = (SGPhotoTableViewCell*)[self tableView:self.feedTableView cellForRowAtIndexPath:indexPath];
-        progressValues[indexPath.section] = (double)totalBytesWritten/(double)totalBytesExpectedToWrite;
-        NSLog(@"%f / %f", (double)totalBytesWritten,
-              (double)totalBytesExpectedToWrite);
-        [self.feedTableView reloadData];
-    });
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -292,6 +289,83 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     [getStandartResolutionImageTask resume];
     
     return view;
+}
+
+#pragma mark Download tasks info
+-(NSMutableDictionary*)getInfoForDownloadTask:(NSURLSessionDownloadTask*)downloadTask
+{
+    for (NSMutableDictionary *info in self.activeTasks) {
+        if (info[@"downloadTask"] == downloadTask) {
+            return info;
+        }
+    }
+    return nil;
+}
+
+-(NSMutableDictionary*)getInfoForDownloadTaskAtIndexPath:(NSIndexPath*)indexPath
+{
+    for (NSMutableDictionary *info in self.activeTasks) {
+        NSIndexPath *candidateIndexPath = info[@"indexPath"];
+        if (candidateIndexPath.section == indexPath.section) {
+            return info;
+        }
+    }
+    return nil;
+}
+
+#pragma mark URLSession delegate methods
+-(void)URLSession:(NSURLSession *)session
+     downloadTask:(NSURLSessionDownloadTask *)downloadTask
+didResumeAtOffset:(int64_t)fileOffset
+expectedTotalBytes:(int64_t)expectedTotalBytes
+{
+    NSMutableDictionary *info = [self getInfoForDownloadTask:downloadTask];
+    [info setObject:[NSNumber numberWithLong:expectedTotalBytes] forKey:@"totalSize"];
+}
+
+-(void)URLSession:(NSURLSession *)session
+     downloadTask:(NSURLSessionDownloadTask *)downloadTask
+     didWriteData:(int64_t)bytesWritten
+totalBytesWritten:(int64_t)totalBytesWritten
+totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
+{
+    NSMutableDictionary *downloadTaskInfo = [self getInfoForDownloadTask:downloadTask];
+    [downloadTaskInfo setObject:[NSNumber numberWithLong:totalBytesWritten] forKey:@"downloadedSize"];
+    
+    NSIndexPath *indexPath = downloadTaskInfo[@"indexPath"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSError *error;
+        if(![self.managedObjectContext save:&error]) {
+            NSLog(@"%@",error);
+        }
+        [self.feedTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        [self.feedTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]
+                          withRowAnimation:UITableViewRowAnimationNone];
+    });
+    NSLog(@"Downloading for section %li: %f", (long)indexPath.section, (double)totalBytesWritten/(double)totalBytesExpectedToWrite);
+}
+
+-(void)URLSession:(NSURLSession *)session
+     downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask
+didFinishDownloadingToURL:(nonnull NSURL *)location
+{
+    NSData *downloadedData = [NSData dataWithContentsOfURL:location];
+    
+    NSMutableDictionary *downloadInfo = [self getInfoForDownloadTask:downloadTask];
+    InstagramMedia *media = downloadInfo[@"media"];
+    media.standartResolutionImageData = downloadedData;
+    
+    NSIndexPath *indexPath = downloadInfo[@"indexPath"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.feedTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        [self.feedTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]
+                          withRowAnimation:UITableViewRowAnimationNone];
+    });
+    
+    NSLog(@"Downloaded image for section %li", indexPath.section);
+    [self.activeTasks removeObject:downloadTask];
 }
 
 #pragma mark - Navigation

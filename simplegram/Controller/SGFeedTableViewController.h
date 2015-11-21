@@ -12,7 +12,7 @@
 #import "SGImporter.h"
 #import "SGBaseTableViewController.h"
 
-@interface SGFeedTableViewController : SGBaseTableViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SGImporterDelegate, NSURLSessionDataDelegate>
+@interface SGFeedTableViewController : SGBaseTableViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SGImporterDelegate, NSURLSessionDownloadDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UITableView *feedTableView;
@@ -44,5 +44,10 @@
  * Кнопка логина или разлогина. Нужно менять название каждый раз, когда состояние сессии изменяется.
 **/
 @property (weak, nonatomic) IBOutlet UIButton *logInOrOutButton;
+
+/**
+ * Активные загрузки (изображений)
+**/
+@property (nonatomic, strong) NSMutableArray *activeTasks;
 
 @end

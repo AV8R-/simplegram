@@ -27,4 +27,9 @@
     _downloadProgressView.hidden = YES;
 }
 
+-(void)prepareForReuse
+{
+    self.photoImageView.image = [[UIImage alloc] init];
+}
+
 @end

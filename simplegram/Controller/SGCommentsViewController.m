@@ -28,8 +28,6 @@
 {
     self = [super initWithCoder:aDecoder];
     
-    api = [InstagramAPI sharedInstance];
-    
     return self;
 }
 
@@ -37,6 +35,12 @@
     [super viewDidLoad];
     
     [self loadCommetns];
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = NO;
+    [super viewWillAppear:animated];
 }
 
 -(void) viewDidAppear:(BOOL)animated
