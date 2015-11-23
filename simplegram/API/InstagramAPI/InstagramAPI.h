@@ -91,5 +91,13 @@
            toMediaID:(NSString*)mediaID
          withSuccess:(void(^)(NSDictionary *serverResponse))success
              failure:(void(^)(NSError* error, NSInteger serverStatusCode))failure;
+/**
+ * Загружает картинку для InstagramMedia
+ * @param URL - URL картинки
+ * @param loading - callback, вызываемый во время загрузки, преедает состояние загрузки
+ * @param loadDidEnd - callback, вызываемый когда загрузка завершилась
+**/
+- (void) downloadImageFromURL:(NSURL*)url
+          withLoadingCallback:(void(^)(NSNumber *progress))loading;
 
 @end

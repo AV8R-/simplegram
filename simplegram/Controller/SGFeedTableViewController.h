@@ -11,6 +11,7 @@
 #import "SGImporterDelegate.h"
 #import "SGImporter.h"
 #import "SGBaseTableViewController.h"
+#import "SGExporter.h"
 
 @interface SGFeedTableViewController : SGBaseTableViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SGImporterDelegate, NSURLSessionDownloadDelegate>
 
@@ -34,6 +35,11 @@
  * Сохраняет полученные JSON-ки в сущности Core Data
 **/
 @property (nonatomic, strong) SGImporter *importer;
+
+/**
+ * Управляет чтением данных из БД
+**/
+@property (nonatomic, strong) SGExporter *exporter;
 
 /**
  * Показывает окно с логином или разлогинивает пользователя.

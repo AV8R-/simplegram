@@ -31,7 +31,9 @@
     self.importer = [[SGImporter alloc] initWithContext:self.backgroundManagedObjectContext];
     self.importer.delegate = self;
     
-    //Настрока tableView
+    //Настрока экспортера данных
+    
+    self.exporter = [[SGExporter alloc] initWithManagedObjectContext:self.managedObjectContext];
 
     return self;
 }
@@ -71,7 +73,6 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self fillFeedWithStore];
-        [self.feedTableView reloadData];
         [self.refreshControl endRefreshing];
     });
 }
@@ -80,22 +81,16 @@
 {
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
     [self.importer importPopular];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self fillFeedWithStore];
+        [self.refreshControl endRefreshing];
+    });
 }
 
 -(void) fillFeedWithStore
 {
-    NSFetchRequest *request= [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"InstagramMedia"
-                                              inManagedObjectContext:self.managedObjectContext];
-    
-    [request setEntity:entity];
-    
-    NSSortDescriptor *createdDateDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdDate" ascending:NO];
-    
-    [request setSortDescriptors:@[createdDateDescriptor]];
-    
-    NSError *error;
-    feed = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    feed = [self.exporter readFeed];
+    [self.feedTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -221,24 +216,6 @@
                                                          delegateQueue:nil];
         NSURLSessionDownloadTask *getStandartResolutionImageTask = [session downloadTaskWithURL:[NSURL URLWithString:media.standartResolutionImageURL]];
         
-        /*
-        NSURLSessionDataTask *getStandartResolutionImageTask = [session dataTaskWithURL: [NSURL URLWithString:media.standartResolutionImageURL]
-                                                                      completionHandler:^(NSData *data,
-                                                                                          NSURLResponse *response,
-                                                                                          NSError *error) {
-                                                                          UIImage *image = [[UIImage alloc] initWithData:data];
-                                                                          media.photo = image;
-                                                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                                                              media.standartResolutionImageData = data;
-                                                                              cell.photoImageView.image = media.photo;
-                                                                              NSError *error;
-                                                                              if(![self.managedObjectContext save:&error])
-                                                                              {
-                                                                                  abort();
-                                                                              }
-                                                                          });
-                                                                      }];
-         */
         
         NSMutableDictionary *downloadTaskInfo = [[NSMutableDictionary alloc] init];
         [downloadTaskInfo setObject:getStandartResolutionImageTask forKey:@"downloadTask"];
@@ -338,10 +315,12 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
         if(![self.managedObjectContext save:&error]) {
             NSLog(@"%@",error);
         }
+        [self.feedTableView beginUpdates];
         [self.feedTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]
                                   withRowAnimation:UITableViewRowAnimationNone];
         [self.feedTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]
                           withRowAnimation:UITableViewRowAnimationNone];
+        [self.feedTableView endUpdates];
     });
     NSLog(@"Downloading for section %li: %f", (long)indexPath.section, (double)totalBytesWritten/(double)totalBytesExpectedToWrite);
 }
@@ -354,14 +333,26 @@ didFinishDownloadingToURL:(nonnull NSURL *)location
     
     NSMutableDictionary *downloadInfo = [self getInfoForDownloadTask:downloadTask];
     InstagramMedia *media = downloadInfo[@"media"];
-    media.standartResolutionImageData = downloadedData;
+    [self.managedObjectContext performBlock:^{
+        media.standartResolutionImageData = downloadedData;
+        
+        NSError *error;
+        if(![self.managedObjectContext save:&error])
+        {
+            NSLog(@"%@", error);
+        }
+
+    }];
+    
     
     NSIndexPath *indexPath = downloadInfo[@"indexPath"];
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self.feedTableView beginUpdates];
         [self.feedTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                                   withRowAnimation:UITableViewRowAnimationNone];
         [self.feedTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]
                           withRowAnimation:UITableViewRowAnimationNone];
+        [self.feedTableView endUpdates];
     });
     
     NSLog(@"Downloaded image for section %li", indexPath.section);
